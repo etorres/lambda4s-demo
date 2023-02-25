@@ -9,14 +9,14 @@ import scala.concurrent.duration.FiniteDuration
 import scala.util.Success
 
 object PromiseLikeSyntax:
-  implicit final class PromiseLikeOps[A](self: PromiseLike[A]):
+  extension [A](self: PromiseLike[A])
     def toIO(using executionContext: ExecutionContext): IO[A] = toIO(timeout = None)
 
     def toIO(timeout: FiniteDuration)(using executionContext: ExecutionContext): IO[A] = toIO(
       Some(timeout),
     )
 
-    private def toIO(timeout: Option[FiniteDuration])(implicit
+    private def toIO(timeout: Option[FiniteDuration])(using
         executionContext: ExecutionContext,
     ): IO[A] =
       val blockingIO = IO.blocking(self.toFuture.andThen { case Success(result) => result })

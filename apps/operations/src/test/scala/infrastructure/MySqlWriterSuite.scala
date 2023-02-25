@@ -1,7 +1,6 @@
 package es.eriktorr.lambda4s
 package infrastructure
 
-import database.IoQuery.IoQuerySyntax.IoQueryOps
 import database.RowMapper
 import database.mysql.MySqlTransactor
 import infrastructure.MySqlWriterSuite.MysqlTable
@@ -40,6 +39,6 @@ object MySqlWriterSuite:
   final private case class MysqlTable(table_name: String)
 
   @nowarn("msg=Declaration is never used") // IntelliJ IDEA
-  private given mysqlTableRowMapper: RowMapper[MysqlTable] with
+  private given RowMapper[MysqlTable] with
     override def from(rows: js.Array[js.Object]): List[MysqlTable] =
       RowMapper.from[MysqlTable](rows)

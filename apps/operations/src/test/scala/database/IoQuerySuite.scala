@@ -1,8 +1,6 @@
 package es.eriktorr.lambda4s
 package database
 
-import database.IoQuery.IoQuerySyntax.IoQueryOps
-
 import cats.data.NonEmptyList
 import cats.effect.IO
 import munit.CatsEffectSuite

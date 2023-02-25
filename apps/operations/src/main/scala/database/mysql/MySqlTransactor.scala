@@ -1,7 +1,7 @@
 package es.eriktorr.lambda4s
 package database.mysql
 
-import database.PromiseLikeSyntax.PromiseLikeOps
+import database.PromiseLikeSyntax.toIO
 import database.{DatabaseConfiguration, IoQuery, Transactor}
 
 import cats.effect.{IO, Resource}
@@ -10,9 +10,8 @@ import typings.promiseMysql.mod.{createConnection, Connection, ConnectionConfig}
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
 
-final class MySqlTransactor private (connection: Connection)(implicit
-    val executor: ExecutionContext,
-) extends Transactor:
+final class MySqlTransactor private (connection: Connection)(using val executor: ExecutionContext)
+    extends Transactor:
   override def query(expression: String): IoQuery = IoQuery(
     connection
       .query[js.Array[js.Object]](expression)
