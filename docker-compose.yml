@@ -1,0 +1,30 @@
+#
+# To connect from adminer: specify service name (mysql) rather than the container's IP address (localhost)
+# To connect from mysql client: mysql -u root -h 127.0.0.1 -p
+#
+version: '3.8'
+services:
+  mysql:
+    image: mysql:8
+    command: --default-authentication-plugin=mysql_native_password
+    container_name: mysql.test
+    hostname: mysql.test
+    environment:
+      MYSQL_ROOT_PASSWORD: s3c4Et
+      MYSQL_USER: test
+      MYSQL_PASSWORD: changeMe
+    ports:
+      - "3306:3306"
+    volumes:
+      - "./docker/mysql/sakila.sql:/docker-entrypoint-initdb.d/sakila.sql"
+
+  adminer:
+    image: adminer
+    hostname: adminer
+    container_name: adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    environment:
+      ADMINER_DESIGN: dracula
