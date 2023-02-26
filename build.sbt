@@ -43,6 +43,7 @@ lazy val notifications = project
   .configure(baseSettings)
   .settings(
     libraryDependencies ++= Seq(
+      "com.comcast" %%% "ip4s-core" % "3.2.0",
       "io.circe" %%% "circe-parser" % "0.14.4",
       "is.cir" %%% "ciris" % "3.1.0",
       "org.http4s" %%% "http4s-circe" % "0.23.18",
