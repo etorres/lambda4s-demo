@@ -31,9 +31,7 @@ lazy val commons = project
   .configure(baseSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "org.log4s" %%% "log4s" % "1.10.0" % Optional,
       "org.typelevel" %%% "cats-effect" % "3.4.8" % Optional,
-      "org.typelevel" %%% "log4cats-core" % "2.5.0" % Optional,
     ),
   )
 
