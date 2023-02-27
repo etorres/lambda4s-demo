@@ -26,7 +26,8 @@ abstract class MySqlWriterSuite[A](
             .query(
               s"""SELECT table_name
                  | FROM information_schema.tables
-                 | WHERE table_schema = '${databaseTestConfiguration.database}'""".stripMargin,
+                 | WHERE table_schema = '${databaseTestConfiguration.database}'
+                 |   AND table_type = 'BASE TABLE'""".stripMargin,
             )
             .list[MysqlTable]
           _ <- tables.traverse_(table => connection.update(s"TRUNCATE TABLE ${table.table_name}"))

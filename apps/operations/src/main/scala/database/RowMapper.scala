@@ -1,6 +1,7 @@
 package es.eriktorr.lambda4s
 package database
 
+import org.typelevel.ci.CIString
 import shapeless3.deriving.Labelling
 
 import scala.annotation.tailrec
@@ -14,13 +15,13 @@ object RowMapper:
   def from[A](
       rows: js.Array[js.Object],
   )(using labelling: Labelling[A], mirror: Mirror.ProductOf[A]): List[A] =
-    val fieldNames = labelling.elemLabels.reverse.toList
+    val fieldNames = labelling.elemLabels.map(CIString.apply).reverse.toList
 
     rows.map { row =>
-      val rowMap = js.Object.entries(row).map(t => (t._1, t._2)).toMap
+      val rowMap = js.Object.entries(row).map(t => (CIString(t._1), t._2)).toMap
 
       @tailrec
-      def fillWith(fieldNames: List[String], values: Tuple): Tuple = fieldNames match
+      def fillWith(fieldNames: List[CIString], values: Tuple): Tuple = fieldNames match
         case Nil => values
         case ::(head, next) =>
           fillWith(

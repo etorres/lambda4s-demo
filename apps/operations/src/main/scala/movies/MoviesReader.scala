@@ -8,8 +8,8 @@ import movies.MoviesReader.{CumulativeRevenue, RatingCounter}
 import cats.effect.IO
 import org.typelevel.log4cats.Logger
 
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.time.{LocalDate, LocalDateTime}
 import scala.scalajs.js
 
 trait MoviesReader:
@@ -25,7 +25,7 @@ trait MoviesReader:
     * @return
     *   cumulative revenue
     */
-  def cumulativeRevenueDuring(dateRange: DateRange[LocalDate]): IO[List[CumulativeRevenue]]
+  def cumulativeRevenueDuring(dateTimeRange: DateRange[LocalDateTime]): IO[List[CumulativeRevenue]]
 
 object MoviesReader:
   final case class CumulativeRevenue(
@@ -54,9 +54,9 @@ object MoviesReader:
       logger.debug(s"Query: $sql") *> transactor.query(sql).list[RatingCounter]
 
     override def cumulativeRevenueDuring(
-        dateRange: DateRange[LocalDate],
+        dateTimeRange: DateRange[LocalDateTime],
     ): IO[List[CumulativeRevenue]] =
-      val (fromDate, toDate) = dateRange.format(DateTimeFormatter.ISO_LOCAL_DATE.nn)
+      val (fromDate, toDate) = dateTimeRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME.nn)
       val sql =
         s"""SELECT payment_date AS paymentDate, amount, sum(amount) OVER (ORDER BY payment_date) AS cumulativeRevenue
            | FROM (

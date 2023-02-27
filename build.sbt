@@ -67,6 +67,7 @@ lazy val operations = project
       "org.http4s" %%% "http4s-circe" % "0.23.18",
       "org.http4s" %%% "http4s-dsl" % "0.23.18",
       "org.http4s" %%% "http4s-ember-client" % "0.23.18",
+      "org.typelevel" %%% "case-insensitive" % "1.3.0",
       "org.typelevel" %%% "feral-lambda-http4s" % "0.2.0",
       "org.typelevel" %%% "shapeless3-deriving" % "3.3.0",
     ),
