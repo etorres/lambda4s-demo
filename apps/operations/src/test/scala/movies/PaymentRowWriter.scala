@@ -33,14 +33,14 @@ final class PaymentRowWriter(
               | ${row.customer_id},
               | ${row.staff_id},
               | ${row.rental_id},
-              | ${row.amount},
-              | ${row.payment_date.format(formatter)},
-              | ${row.last_update.format(formatter)}
+              | '${row.amount}',
+              | '${row.payment_date.format(formatter)}',
+              | '${row.last_update.format(formatter)}'
               |)""".stripMargin,
   )
 
 object PaymentRowWriter:
-  private val formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+  private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
   final case class PaymentRow(
       payment_id: Short,
@@ -65,7 +65,7 @@ object PaymentRowWriter:
     customer_id <- customerIdGen
     staff_id <- staffIdGen
     rental_id <- rentalIdGen
-    amount <- Gen.choose(0.0d, 10000.0d)
+    amount <- Gen.choose(0.0d, 100.0d).map(x => math.floor(x * 100.0d) / 100.0d)
     payment_date <- paymentDateGen
     last_update <- TemporalGenerators.after(payment_date)
   yield PaymentRow(payment_id, customer_id, staff_id, rental_id, amount, payment_date, last_update)
