@@ -20,6 +20,9 @@ object TemporalGenerators:
     to <- genDateTimeWithinRange(from.plusDays(1L), Duration.ofDays(365L))
   yield DateRange(from.toLocalDate, to.toLocalDate)
 
+  def after(localDate: LocalDate): Gen[LocalDate] =
+    within(DateRange(localDate.plusDays(1L), localDate.plusYears(1L)))
+
   def outOf(dateRange: DateRange[LocalDate]): Gen[LocalDate] =
     Gen.frequency(
       1 -> within(DateRange(dateRange.from.minusYears(1L), dateRange.from.minusDays(1L))),
