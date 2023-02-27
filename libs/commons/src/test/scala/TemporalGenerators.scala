@@ -13,7 +13,7 @@ import java.time.{Duration, LocalDate}
 object TemporalGenerators:
   import scala.language.unsafeNulls
 
-  implicit private val yearRange: YearRange = YearRange.between(1990, 2060)
+  private given yearRange: YearRange = YearRange.between(1990, 2060)
 
   val localDateRangeGen: Gen[DateRange[LocalDate]] = for
     from <- arbLocalDateTimeJdk8.arbitrary

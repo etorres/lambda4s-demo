@@ -18,8 +18,8 @@ object CloudWatchEvent:
   final case class CloudWatchLogs(data: String)
 
   object CloudWatchLogs:
-    implicit val cloudWatchLogsJsonDecoder: Decoder[CloudWatchLogs] =
+    given cloudWatchLogsJsonDecoder: Decoder[CloudWatchLogs] =
       Decoder.forProduct1("data")(CloudWatchLogs.apply)
 
-    implicit val cloudWatchEventJsonDecoder: Decoder[CloudWatchEvent] =
+    given cloudWatchEventJsonDecoder: Decoder[CloudWatchEvent] =
       Decoder.forProduct1("awslogs")(CloudWatchEvent.apply)

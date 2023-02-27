@@ -17,10 +17,10 @@ final case class CloudWatchLogEvents(
 object CloudWatchLogEvents:
   final case class CloudWatchLogEvent(id: String, message: String, timestamp: Long)
 
-  implicit val cloudWatchLogEventJsonDecoder: Decoder[CloudWatchLogEvent] =
+  given cloudWatchLogEventJsonDecoder: Decoder[CloudWatchLogEvent] =
     Decoder.forProduct3("id", "message", "timestamp")(CloudWatchLogEvent.apply)
 
-  implicit val cloudWatchLogEventsJsonDecoder: Decoder[CloudWatchLogEvents] =
+  given cloudWatchLogEventsJsonDecoder: Decoder[CloudWatchLogEvents] =
     Decoder.forProduct6(
       "logEvents",
       "logGroup",

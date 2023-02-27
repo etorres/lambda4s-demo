@@ -11,8 +11,8 @@ object SlackMessage:
   final case class SlackAttachment(text: String)
 
   object SlackAttachment:
-    implicit val slackAttachmentJsonEncoder: Encoder[SlackAttachment] =
+    given slackAttachmentJsonEncoder: Encoder[SlackAttachment] =
       Encoder.forProduct1("text")(_.text)
 
-    implicit val slackMessageJsonEncoder: Encoder[SlackMessage] =
+    given slackMessageJsonEncoder: Encoder[SlackMessage] =
       Encoder.forProduct2("text", "attachments")(x => (x.text, x.attachments))

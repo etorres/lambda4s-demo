@@ -13,7 +13,7 @@ final case class CloudWatchEventsConfiguration(slackConfiguration: SlackConfigur
 
 object CloudWatchEventsConfiguration:
   def load: IO[CloudWatchEventsConfiguration] =
-    implicit val uriConfigDecoder: ConfigDecoder[String, URI] =
+    given uriConfigDecoder: ConfigDecoder[String, URI] =
       ConfigDecoder[String, String].mapEither { case (_, uri) =>
         Try(URI.create(uri).nn).toEither.leftMap(error => ConfigError(error.getMessage.nn))
       }

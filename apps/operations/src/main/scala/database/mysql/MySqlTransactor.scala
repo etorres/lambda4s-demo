@@ -26,7 +26,7 @@ object MySqlTransactor:
       databaseConfiguration: DatabaseConfiguration,
       executionContext: ExecutionContext,
   ): Resource[IO, Transactor] =
-    implicit val executor: ExecutionContext = executionContext
+    given executor: ExecutionContext = executionContext
     for connection <- Resource
         .make(
           createConnection(

@@ -44,7 +44,7 @@ object MovieReader:
     given RowMapper[RatingCounter] = (rows: js.Array[js.Object]) =>
       RowMapper.from[RatingCounter](rows)
 
-  def impl(transactor: Transactor)(implicit logger: Logger[IO]): MovieReader = new MovieReader:
+  def impl(transactor: Transactor)(using logger: Logger[IO]): MovieReader = new MovieReader:
     override def filmsByRating: IO[List[RatingCounter]] =
       val sql =
         """SELECT rating, count(*) AS count
