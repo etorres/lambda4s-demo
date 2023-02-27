@@ -3,14 +3,14 @@ package movies
 
 import TemporalGenerators.localDateRangeGen
 import infrastructure.MySqlSuite
-import movies.MovieReader.CumulativeRevenue
-import movies.MovieReaderSuite.cumulativeRevenueTestCaseGen
+import movies.MoviesReader.CumulativeRevenue
+import movies.MoviesReaderSuite.cumulativeRevenueTestCaseGen
 
 import org.scalacheck.effect.PropF.forAllF
 
 import java.time.LocalDate
 
-final class MovieReaderSuite extends MySqlSuite:
+final class MoviesReaderSuite extends MySqlSuite:
 
   test("should count the number of films grouped by their rating") {
     fail("not implemented")
@@ -25,7 +25,7 @@ final class MovieReaderSuite extends MySqlSuite:
     }
   }
 
-object MovieReaderSuite:
+object MoviesReaderSuite:
   final private case class CumulativeRevenueTestCase(
       dateRange: DateRange[LocalDate],
       expected: List[CumulativeRevenue],

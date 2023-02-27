@@ -3,7 +3,7 @@ package movies
 
 import database.IoQuery.list
 import database.{RowMapper, Transactor}
-import movies.MovieReader.{CumulativeRevenue, RatingCounter}
+import movies.MoviesReader.{CumulativeRevenue, RatingCounter}
 
 import cats.effect.IO
 import org.typelevel.log4cats.Logger
@@ -12,7 +12,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import scala.scalajs.js
 
-trait MovieReader:
+trait MoviesReader:
   /** Count the number of films grouped by their rating.
     * @return
     *   the number of films in each rating
@@ -27,7 +27,7 @@ trait MovieReader:
     */
   def cumulativeRevenueDuring(dateRange: DateRange[LocalDate]): IO[List[CumulativeRevenue]]
 
-object MovieReader:
+object MoviesReader:
   final case class CumulativeRevenue(
       paymentDate: LocalDate,
       amount: Double,
@@ -44,7 +44,7 @@ object MovieReader:
     given RowMapper[RatingCounter] = (rows: js.Array[js.Object]) =>
       RowMapper.from[RatingCounter](rows)
 
-  def impl(transactor: Transactor)(using logger: Logger[IO]): MovieReader = new MovieReader:
+  def impl(transactor: Transactor)(using logger: Logger[IO]): MoviesReader = new MoviesReader:
     override def filmsByRating: IO[List[RatingCounter]] =
       val sql =
         """SELECT rating, count(*) AS count
