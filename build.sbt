@@ -31,7 +31,10 @@ lazy val commons = project
   .configure(baseSettings)
   .settings(
     libraryDependencies ++= Seq(
+      "io.github.cquiroz" %%% "scala-java-time" % "2.5.0" % Optional,
+      "org.log4s" %%% "log4s" % "1.10.0" % Optional,
       "org.typelevel" %%% "cats-effect" % "3.4.8" % Optional,
+      "org.typelevel" %%% "log4cats-core" % "2.5.0" % Optional,
     ),
   )
 
