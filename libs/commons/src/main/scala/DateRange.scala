@@ -10,11 +10,12 @@ object DateRange:
   trait DateRangeFormatter[T <: Temporal, F]:
     def format(dateRange: DateRange[T], formatter: F): (String, String)
 
-  implicit val localDateRangeFormatter: DateRangeFormatter[LocalDate, DateTimeFormatter] =
-    (dateRange: DateRange[LocalDate], formatter: DateTimeFormatter) =>
-      (dateRange.from.format(formatter).nn, dateRange.to.format(formatter).nn)
+  given DateRangeFormatter[LocalDate, DateTimeFormatter] with
+    override def format(
+        dateRange: DateRange[LocalDate],
+        formatter: DateTimeFormatter,
+    ): (String, String) = (dateRange.from.format(formatter).nn, dateRange.to.format(formatter).nn)
 
   extension [T <: Temporal, F](self: DateRange[T])
-    def format(formatter: F)(implicit
-        dateRangeFormatter: DateRangeFormatter[T, F],
-    ): (String, String) = dateRangeFormatter.format(self, formatter)
+    def format(formatter: F)(using dateRangeFormatter: DateRangeFormatter[T, F]): (String, String) =
+      dateRangeFormatter.format(self, formatter)

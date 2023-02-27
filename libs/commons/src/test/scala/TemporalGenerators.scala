@@ -11,7 +11,9 @@ import java.time.temporal.ChronoUnit
 import java.time.{Duration, LocalDate}
 
 object TemporalGenerators:
-  implicit private val yearRange: AnyRef with YearRange = YearRange.between(1990, 2060)
+  import scala.language.unsafeNulls
+
+  implicit private val yearRange: YearRange = YearRange.between(1990, 2060)
 
   val localDateRangeGen: Gen[DateRange[LocalDate]] = for
     from <- arbLocalDateTimeJdk8.arbitrary
