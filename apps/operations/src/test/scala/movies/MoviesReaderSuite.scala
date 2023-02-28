@@ -5,7 +5,7 @@ import CollectionGenerators.nDistinct
 import TemporalGenerators.{localDateTimeRangeGen, outOfLocalDateTimeRange, withinLocalDateTimeRange}
 import database.mysql.MySqlTransactor
 import infrastructure.DatabaseTestConfiguration.SakilaMySqlTest
-import infrastructure.{DatabaseTestConfiguration, MySqlSuite}
+import infrastructure.{DatabaseTestConfiguration, MySqlSuite, MySqlTestTransactor}
 import movies.CityRowWriter.{cityIdGen, cityRowGen, CityRow}
 import movies.CountryRowWriter.{countryIdGen, countryRowGen, CountryRow}
 import movies.MoviesReader.CumulativeRevenue
@@ -27,17 +27,19 @@ final class MoviesReaderSuite extends MySqlSuite:
 
   test("should calculate the cumulative revenue during the given period") {
     forAllF(cumulativeRevenueTestCaseGen) { testCase =>
-      for
-        logger <- Log4sFactory.impl().create
-        _ <- CountryRowWriter(SakilaMySqlTest, munitExecutionContext).add(testCase.countryRows)
-        _ <- CityRowWriter(SakilaMySqlTest, munitExecutionContext).add(testCase.cityRows)
-//        _ <- PaymentRowWriter(SakilaMySqlTest, munitExecutionContext).add(testCase.paymentRows)
-        obtained <- MySqlTransactor.of(SakilaMySqlTest.config, munitExecutionContext).use {
-          transactor =>
-            val moviesReader = MoviesReader.impl(transactor)(using logger)
-            moviesReader.cumulativeRevenueDuring(testCase.dateTimeRange)
-        }
-      yield assertEquals(obtained, testCase.expected, "Cumulative revenues are not the same")
+      MySqlTestTransactor
+        .of(SakilaMySqlTest, munitExecutionContext)
+        .use(testTransactor =>
+          for
+            logger <- Log4sFactory.impl().create
+            _ <- CountryRowWriter(testTransactor).add(testCase.countryRows)
+            _ <- CityRowWriter(testTransactor).add(testCase.cityRows)
+            _ <- PaymentRowWriter(testTransactor).add(testCase.paymentRows)
+            moviesReader = MoviesReader.impl(testTransactor.transactor)(using logger)
+            obtained <- moviesReader.cumulativeRevenueDuring(testCase.dateTimeRange)
+          yield obtained,
+        )
+        .assertEquals(testCase.expected, "Cumulative revenues are not the same")
     }
   }
 
@@ -60,14 +62,20 @@ object MoviesReaderSuite:
     (selectedPaymentIds, paymentIdsOutOfDateTimeRange) = paymentIds.splitAt(3)
     selectedPayments <- selectedPaymentIds.traverse(paymentId =>
       paymentRowGen(
-        paymentIdGen = paymentId,
+        customerIdGen = 1,
         paymentDateGen = withinLocalDateTimeRange(dateTimeRange),
+        paymentIdGen = paymentId,
+        rentalIdGen = 1,
+        staffIdGen = 1,
       ),
     )
     paymentsOutOfDateTimeRange <- paymentIdsOutOfDateTimeRange.traverse(paymentId =>
       paymentRowGen(
-        paymentIdGen = paymentId,
+        customerIdGen = 1,
         paymentDateGen = outOfLocalDateTimeRange(dateTimeRange),
+        paymentIdGen = paymentId,
+        rentalIdGen = 1,
+        staffIdGen = 1,
       ),
     )
     expected = List.empty

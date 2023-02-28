@@ -2,24 +2,16 @@ package es.eriktorr.lambda4s
 package movies
 
 import StringGenerators.stringBetween
-import TemporalGenerators.localDateTimeGen
-import infrastructure.DatabaseTestConfiguration.mysqlDateTimeFormatter
-import infrastructure.{DatabaseTestConfiguration, MySqlWriterSuite}
-import movies.AddressRowWriter.addressIdGen
+import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
 import movies.StaffRowWriter.StaffRow
-import movies.StoreRowWriter.storeIdGen
 
 import cats.effect.IO
-import com.fortysevendeg.scalacheck.datetime.jdk8.ArbitraryJdk8.arbLocalDateTimeJdk8
 import org.scalacheck.{Arbitrary, Gen}
 
 import java.time.LocalDateTime
-import scala.concurrent.ExecutionContext
 
-final class StaffRowWriter(
-    databaseTestConfiguration: DatabaseTestConfiguration,
-    executionContext: ExecutionContext,
-) extends MySqlWriterSuite[StaffRow](databaseTestConfiguration, executionContext):
+final class StaffRowWriter(testTransactor: MySqlTestTransactor)
+    extends MySqlWriterSuite[StaffRow](testTransactor):
   def add(rows: List[StaffRow]): IO[Unit] = super.add(
     rows,
     row => s"""INSERT INTO staff (
@@ -32,8 +24,7 @@ final class StaffRowWriter(
               | store_id,
               | active,
               | username,
-              | password,
-              | last_update
+              | password
               |) VALUES (
               | ${row.staff_id},
               | '${row.first_name}',
@@ -44,8 +35,7 @@ final class StaffRowWriter(
               | ${row.store_id},
               | ${if row.active then 1 else 0},
               | '${row.username}',
-              | '${row.password}',
-              | '${row.last_update.format(mysqlDateTimeFormatter)}'
+              | '${row.password}'
               |)
               |""".stripMargin,
   )
@@ -62,15 +52,15 @@ object StaffRowWriter:
       active: Boolean,
       username: String,
       password: String,
-      last_update: LocalDateTime,
+      last_update: Option[LocalDateTime],
   )
 
   val staffIdGen: Gen[Byte] = Gen.choose[Byte](0, Byte.MaxValue)
 
   def staffRowGen(
-      addressIdGen: Gen[Short] = addressIdGen,
-      staffIdGen: Gen[Byte] = staffIdGen,
-      storeIdGen: Gen[Short] = storeIdGen,
+      addressIdGen: Gen[Short],
+      staffIdGen: Gen[Byte],
+      storeIdGen: Gen[Short],
   ): Gen[StaffRow] = for
     staff_id <- staffIdGen
     first_name <- stringBetween(3, 45)
@@ -81,7 +71,6 @@ object StaffRowWriter:
     active <- Arbitrary.arbBool.arbitrary
     username <- stringBetween(3, 16)
     password <- stringBetween(3, 40)
-    last_update <- localDateTimeGen
   yield StaffRow(
     staff_id,
     first_name,
@@ -93,5 +82,5 @@ object StaffRowWriter:
     active,
     username,
     password,
-    last_update,
+    None,
   )
