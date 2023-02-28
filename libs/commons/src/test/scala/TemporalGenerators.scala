@@ -17,6 +17,8 @@ object TemporalGenerators:
 
   val localDateTimeGen: Gen[LocalDateTime] = arbLocalDateTimeJdk8.arbitrary
 
+  val localDateGen: Gen[LocalDate] = localDateTimeGen.map(_.toLocalDate)
+
   val localDateTimeRangeGen: Gen[DateRange[LocalDateTime]] = for
     from <- localDateTimeGen
     to <- genDateTimeWithinRange(from.plusDays(1L), Duration.ofDays(365L))

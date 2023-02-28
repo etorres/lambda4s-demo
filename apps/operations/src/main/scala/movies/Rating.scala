@@ -5,9 +5,9 @@ package movies
   * @see
   *   [[https://en.wikipedia.org/wiki/Motion_Picture_Association_film_rating_system Motion Picture Association film rating system]]
   */
-enum Rating(val recommendedAge: Int):
-  case G extends Rating(0)
-  case PG extends Rating(8)
-  case PG_13 extends Rating(13)
-  case R extends Rating(18)
-  case NC_17 extends Rating(18)
+enum Rating(val recommendedAge: Int, val name: String):
+  case G extends Rating(0, "G")
+  case PG extends Rating(8, "PG")
+  case PG_13 extends Rating(13, "PG-13")
+  case R extends Rating(18, "R")
+  case NC_17 extends Rating(18, "NC-17")

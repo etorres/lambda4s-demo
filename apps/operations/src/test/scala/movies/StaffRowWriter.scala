@@ -48,7 +48,7 @@ object StaffRowWriter:
       address_id: Short,
       picture: Option[String],
       email: String,
-      store_id: Short,
+      store_id: Byte,
       active: Boolean,
       username: String,
       password: String,
@@ -60,7 +60,7 @@ object StaffRowWriter:
   def staffRowGen(
       addressIdGen: Gen[Short],
       staffIdGen: Gen[Byte],
-      storeIdGen: Gen[Short],
+      storeIdGen: Gen[Byte],
   ): Gen[StaffRow] = for
     staff_id <- staffIdGen
     first_name <- stringBetween(3, 45)
