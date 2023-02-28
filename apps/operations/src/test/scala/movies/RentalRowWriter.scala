@@ -1,7 +1,6 @@
 package es.eriktorr.lambda4s
 package movies
 
-import TemporalGenerators.localDateTimeGen
 import infrastructure.DatabaseTestConfiguration.mysqlDateTimeFormatter
 import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
 import movies.RentalRowWriter.RentalRow
@@ -48,11 +47,12 @@ object RentalRowWriter:
   def rentalRowGen(
       customerIdGen: Gen[Short],
       inventoryIdGen: Gen[Short],
+      rentalDateGen: Gen[LocalDateTime],
       rentalIdGen: Gen[Int],
       staffIdGen: Gen[Byte],
   ): Gen[RentalRow] = for
     rental_id <- rentalIdGen
-    rental_date <- localDateTimeGen
+    rental_date <- rentalDateGen
     inventory_id <- inventoryIdGen
     customer_id <- customerIdGen
     staff_id <- staffIdGen

@@ -2,23 +2,28 @@ package es.eriktorr.lambda4s
 package movies
 
 import CollectionGenerators.nDistinct
-import TemporalGenerators.{localDateTimeRangeGen, outOfLocalDateTimeRange, withinLocalDateTimeRange}
+import TemporalGenerators.{
+  localDateTimeGen,
+  localDateTimeRangeGen,
+  outOfLocalDateTimeRange,
+  withinLocalDateTimeRange,
+}
 import database.mysql.MySqlTransactor
 import infrastructure.DatabaseTestConfiguration.SakilaMySqlTest
 import infrastructure.{DatabaseTestConfiguration, MySqlSuite, MySqlTestTransactor}
-import movies.AddressRowWriter.{AddressRow, addressIdGen, addressRowGen}
-import movies.CityRowWriter.{CityRow, cityIdGen, cityRowGen}
-import movies.CountryRowWriter.{CountryRow, countryIdGen, countryRowGen}
-import movies.CustomerRowWriter.{CustomerRow, customerIdGen, customerRowGen}
-import movies.FilmRowWriter.{FilmRow, filmIdGen, filmRowGen}
-import movies.InventoryRowWriter.{InventoryRow, inventoryIdGen, inventoryRowGen}
-import movies.LanguageRowWriter.{LanguageRow, languageIdGen, languageRowGen}
+import movies.AddressRowWriter.{addressIdGen, addressRowGen, AddressRow}
+import movies.CityRowWriter.{cityIdGen, cityRowGen, CityRow}
+import movies.CountryRowWriter.{countryIdGen, countryRowGen, CountryRow}
+import movies.CustomerRowWriter.{customerIdGen, customerRowGen, CustomerRow}
+import movies.FilmRowWriter.{filmIdGen, filmRowGen, FilmRow}
+import movies.InventoryRowWriter.{inventoryIdGen, inventoryRowGen, InventoryRow}
+import movies.LanguageRowWriter.{languageIdGen, languageRowGen, LanguageRow}
 import movies.MoviesReader.CumulativeRevenue
 import movies.MoviesReaderSuite.cumulativeRevenueTestCaseGen
-import movies.PaymentRowWriter.{PaymentRow, paymentIdGen, paymentRowGen}
-import movies.RentalRowWriter.{RentalRow, rentalIdGen, rentalRowGen}
-import movies.StaffRowWriter.{StaffRow, staffIdGen, staffRowGen}
-import movies.StoreRowWriter.{StoreRow, storeIdGen, storeRowGen}
+import movies.PaymentRowWriter.{paymentIdGen, paymentRowGen, PaymentRow}
+import movies.RentalRowWriter.{rentalIdGen, rentalRowGen, RentalRow}
+import movies.StaffRowWriter.{staffIdGen, staffRowGen, StaffRow}
+import movies.StoreRowWriter.{storeIdGen, storeRowGen, StoreRow}
 
 import cats.Applicative
 import cats.implicits.toTraverseOps
@@ -85,13 +90,21 @@ object MoviesReaderSuite:
     addressIds <- nDistinct(3, addressIdGen)
     countryIds <- nDistinct(3, countryIdGen)
     cityIds <- nDistinct(3, cityIdGen)
-    customerIds <- nDistinct(3, customerIdGen)
     dateTimeRange <- localDateTimeRangeGen
     filmIds <- nDistinct(3, filmIdGen)
-    inventoryIds <- nDistinct(3, inventoryIdGen)
     languageIds <- nDistinct(3, languageIdGen)
     paymentIds <- nDistinct(7, paymentIdGen)
-    rentalIds <- nDistinct(7, rentalIdGen)
+    uniqueRentalDates <- nDistinct(
+      7,
+      Applicative[Gen]
+        .product(Applicative[Gen].product(localDateTimeGen, inventoryIdGen), customerIdGen),
+    ).map(_.map { case ((rentalDate, inventoryId), customerId) =>
+      (rentalDate, inventoryId, customerId)
+    })
+    customerIds = uniqueRentalDates.map(_._3)
+    inventoryIds = uniqueRentalDates.map(_._2)
+    rentalIdsWithUniqueRentalDates <- nDistinct(7, rentalIdGen).map(_.zip(uniqueRentalDates))
+    rentalIds = rentalIdsWithUniqueRentalDates.map(_._1)
     managersWithStore <- nDistinct(3, Applicative[Gen].product(staffIdGen, storeIdGen))
     staffIds = managersWithStore.map(_._1)
     storeIds = managersWithStore.map(_._2)
@@ -106,9 +119,10 @@ object MoviesReaderSuite:
     languages <- languageIds.traverse(languageRowGen(_))
     films <- filmIds.traverse(filmRowGen(_, Gen.oneOf(languageIds)))
     inventory <- inventoryIds.traverse(inventoryRowGen(Gen.oneOf(filmIds), _, Gen.oneOf(storeIds)))
-    rentals <- rentalIds.traverse(
-      rentalRowGen(Gen.oneOf(customerIds), Gen.oneOf(inventoryIds), _, Gen.oneOf(staffIds)),
-    )
+    rentals <- rentalIdsWithUniqueRentalDates.traverse {
+      case (rentalId, (rentalDate, inventoryId, customerId)) =>
+        rentalRowGen(customerId, inventoryId, rentalDate, rentalId, Gen.oneOf(staffIds))
+    }
     (selectedPaymentIds, paymentIdsOutOfDateTimeRange) = paymentIds.splitAt(3)
     selectedPayments <- selectedPaymentIds.traverse(paymentId =>
       paymentRowGen(
