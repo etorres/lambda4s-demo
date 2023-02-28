@@ -6,11 +6,14 @@ import TemporalGenerators.{localDateTimeRangeGen, outOfLocalDateTimeRange, withi
 import database.mysql.MySqlTransactor
 import infrastructure.DatabaseTestConfiguration.SakilaMySqlTest
 import infrastructure.{DatabaseTestConfiguration, MySqlSuite}
+import movies.CityRowWriter.{cityIdGen, cityRowGen, CityRow}
+import movies.CountryRowWriter.{countryIdGen, countryRowGen, CountryRow}
 import movies.MoviesReader.CumulativeRevenue
 import movies.MoviesReaderSuite.cumulativeRevenueTestCaseGen
 import movies.PaymentRowWriter.{paymentIdGen, paymentRowGen, PaymentRow}
 
 import cats.implicits.toTraverseOps
+import org.scalacheck.Gen
 import org.scalacheck.cats.implicits.*
 import org.scalacheck.effect.PropF.forAllF
 
@@ -26,8 +29,9 @@ final class MoviesReaderSuite extends MySqlSuite:
     forAllF(cumulativeRevenueTestCaseGen) { testCase =>
       for
         logger <- Log4sFactory.impl().create
-        paymentRowWriter = PaymentRowWriter(SakilaMySqlTest, munitExecutionContext)
-        _ <- paymentRowWriter.add(testCase.paymentRows)
+        _ <- CountryRowWriter(SakilaMySqlTest, munitExecutionContext).add(testCase.countryRows)
+        _ <- CityRowWriter(SakilaMySqlTest, munitExecutionContext).add(testCase.cityRows)
+//        _ <- PaymentRowWriter(SakilaMySqlTest, munitExecutionContext).add(testCase.paymentRows)
         obtained <- MySqlTransactor.of(SakilaMySqlTest.config, munitExecutionContext).use {
           transactor =>
             val moviesReader = MoviesReader.impl(transactor)(using logger)
@@ -39,14 +43,20 @@ final class MoviesReaderSuite extends MySqlSuite:
 
 object MoviesReaderSuite:
   final private case class CumulativeRevenueTestCase(
+      cityRows: List[CityRow],
+      countryRows: List[CountryRow],
       dateTimeRange: DateRange[LocalDateTime],
       expected: List[CumulativeRevenue],
       paymentRows: List[PaymentRow],
   )
 
   private val cumulativeRevenueTestCaseGen = for
+    countryIds <- nDistinct(3, countryIdGen)
+    cityIds <- nDistinct(3, cityIdGen)
     dateTimeRange <- localDateTimeRangeGen
     paymentIds <- nDistinct(7, paymentIdGen)
+    countries <- countryIds.traverse(countryRowGen(_))
+    cities <- cityIds.traverse(cityRowGen(_, Gen.oneOf(countryIds)))
     (selectedPaymentIds, paymentIdsOutOfDateTimeRange) = paymentIds.splitAt(3)
     selectedPayments <- selectedPaymentIds.traverse(paymentId =>
       paymentRowGen(
@@ -62,6 +72,8 @@ object MoviesReaderSuite:
     )
     expected = List.empty
   yield CumulativeRevenueTestCase(
+    cities,
+    countries,
     dateTimeRange,
     expected,
     selectedPayments ++ paymentsOutOfDateTimeRange,

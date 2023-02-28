@@ -5,6 +5,8 @@ import database.DatabaseConfiguration
 
 import com.comcast.ip4s.{host, port}
 
+import java.time.format.DateTimeFormatter
+
 enum DatabaseTestConfiguration(val config: DatabaseConfiguration):
   import DatabaseTestConfiguration.mySqlTest
 
@@ -23,3 +25,6 @@ object DatabaseTestConfiguration:
     port = port"3306",
     user = "test",
   )
+
+  lazy val mysqlDateTimeFormatter: DateTimeFormatter =
+    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").nn

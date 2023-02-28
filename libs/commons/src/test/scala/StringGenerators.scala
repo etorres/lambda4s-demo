@@ -6,7 +6,9 @@ object StringGenerators:
   def stringOfLength(length: Int, charGen: Gen[Char]): Gen[String] =
     Gen.listOfN(length, charGen).map(_.mkString)
 
-  val nonEmptyStringGen: Gen[String] = for
-    len <- Gen.choose(5, 20)
-    str <- stringOfLength(len, Gen.alphaNumChar)
+  def stringBetween(minLength: Int, maxLength: Int): Gen[String] = for
+    length <- Gen.choose(minLength, maxLength)
+    str <- stringOfLength(length, Gen.alphaNumChar)
   yield str
+
+  val nonEmptyStringGen: Gen[String] = stringBetween(5, 20)

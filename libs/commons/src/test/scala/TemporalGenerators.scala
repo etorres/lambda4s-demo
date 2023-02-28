@@ -15,8 +15,10 @@ object TemporalGenerators:
 
   private given yearRange: YearRange = YearRange.between(1990, 2060)
 
+  val localDateTimeGen: Gen[LocalDateTime] = arbLocalDateTimeJdk8.arbitrary
+
   val localDateTimeRangeGen: Gen[DateRange[LocalDateTime]] = for
-    from <- arbLocalDateTimeJdk8.arbitrary
+    from <- localDateTimeGen
     to <- genDateTimeWithinRange(from.plusDays(1L), Duration.ofDays(365L))
   yield DateRange(from, to)
 

@@ -3,7 +3,7 @@ package movies
 
 import infrastructure.{DatabaseTestConfiguration, MySqlWriterSuite}
 import movies.CustomerRowWriter.customerIdGen
-import movies.PaymentRowWriter.{formatter, PaymentRow}
+import movies.PaymentRowWriter.{mysqlDateTimeFormatter, PaymentRow}
 import movies.RentalRowWriter.rentalIdGen
 import movies.StaffRowWriter.staffIdGen
 
@@ -34,13 +34,13 @@ final class PaymentRowWriter(
               | ${row.staff_id},
               | ${row.rental_id},
               | '${row.amount}',
-              | '${row.payment_date.format(formatter)}',
-              | '${row.last_update.format(formatter)}'
+              | '${row.payment_date.format(mysqlDateTimeFormatter)}',
+              | '${row.last_update.format(mysqlDateTimeFormatter)}'
               |)""".stripMargin,
   )
 
 object PaymentRowWriter:
-  private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+  private val mysqlDateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
 
   final case class PaymentRow(
       payment_id: Short,
