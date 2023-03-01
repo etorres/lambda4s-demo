@@ -1,9 +1,9 @@
 package es.eriktorr.lambda4s
-package movies
+package movies.writers
 
 import infrastructure.DatabaseTestConfiguration.mysqlDateTimeFormatter
 import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
-import movies.RentalRowWriter.RentalRow
+import movies.writers.RentalRowWriter.RentalRow
 
 import cats.effect.IO
 import org.scalacheck.Gen

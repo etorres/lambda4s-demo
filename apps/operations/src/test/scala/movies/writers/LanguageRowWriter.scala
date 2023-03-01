@@ -1,9 +1,9 @@
 package es.eriktorr.lambda4s
-package movies
+package movies.writers
 
 import StringGenerators.stringOfLength
 import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
-import movies.LanguageRowWriter.LanguageRow
+import movies.writers.LanguageRowWriter.LanguageRow
 
 import cats.effect.IO
 import org.scalacheck.Gen

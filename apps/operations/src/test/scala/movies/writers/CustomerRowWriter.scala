@@ -1,11 +1,11 @@
 package es.eriktorr.lambda4s
-package movies
+package movies.writers
 
 import StringGenerators.stringBetween
 import TemporalGenerators.localDateTimeGen
 import infrastructure.DatabaseTestConfiguration.mysqlDateTimeFormatter
 import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
-import movies.CustomerRowWriter.CustomerRow
+import movies.writers.CustomerRowWriter.CustomerRow
 
 import cats.effect.IO
 import org.scalacheck.{Arbitrary, Gen}

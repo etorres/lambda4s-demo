@@ -1,8 +1,8 @@
 package es.eriktorr.lambda4s
-package movies
+package movies.writers
 
 import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
-import movies.InventoryRowWriter.InventoryRow
+import movies.writers.InventoryRowWriter.InventoryRow
 
 import cats.effect.IO
 import org.scalacheck.Gen

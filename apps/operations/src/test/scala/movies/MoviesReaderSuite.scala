@@ -6,12 +6,13 @@ import TemporalGenerators.{localDateTimeRangeGen, outOfLocalDateTimeRange, withi
 import database.mysql.MySqlTransactor
 import infrastructure.DatabaseTestConfiguration.SakilaMySqlTest
 import infrastructure.{DatabaseTestConfiguration, MySqlSuite, MySqlTestTransactor}
-import movies.CustomerRowWriter.customerIdGen
 import movies.MoviesReader.CumulativeRevenue
 import movies.MoviesReaderSuite.cumulativeRevenueTestCaseGen
-import movies.PaymentRowWriter.{paymentIdGen, paymentRowGen, PaymentRow}
-import movies.RentalRowWriter.rentalIdGen
-import movies.StaffRowWriter.staffIdGen
+import movies.writers.CustomerRowWriter.customerIdGen
+import movies.writers.PaymentRowWriter
+import movies.writers.PaymentRowWriter.{paymentIdGen, paymentRowGen, PaymentRow}
+import movies.writers.RentalRowWriter.rentalIdGen
+import movies.writers.StaffRowWriter.staffIdGen
 
 import cats.Applicative
 import cats.implicits.toTraverseOps

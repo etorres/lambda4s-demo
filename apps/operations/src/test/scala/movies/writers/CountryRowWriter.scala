@@ -1,9 +1,9 @@
 package es.eriktorr.lambda4s
-package movies
+package movies.writers
 
 import StringGenerators.stringBetween
 import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
-import movies.CountryRowWriter.CountryRow
+import movies.writers.CountryRowWriter.CountryRow
 
 import cats.effect.IO
 import org.scalacheck.Gen

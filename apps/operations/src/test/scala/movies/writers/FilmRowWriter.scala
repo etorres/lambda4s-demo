@@ -1,10 +1,11 @@
 package es.eriktorr.lambda4s
-package movies
+package movies.writers
 
 import StringGenerators.stringBetween
 import TemporalGenerators.localDateGen
 import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
-import movies.FilmRowWriter.FilmRow
+import movies.Rating
+import movies.writers.FilmRowWriter.FilmRow
 
 import cats.effect.IO
 import org.scalacheck.Gen
