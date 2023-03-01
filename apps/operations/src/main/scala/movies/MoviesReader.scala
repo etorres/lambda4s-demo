@@ -56,7 +56,7 @@ object MoviesReader:
     override def cumulativeRevenueDuring(
         dateTimeRange: DateRange[LocalDateTime],
     ): IO[List[CumulativeRevenue]] =
-      val (fromDate, toDate) = dateTimeRange.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME.nn)
+      val (fromDate, toDate) = dateTimeRange.format(DateTimeFormatter.ISO_LOCAL_DATE.nn)
       val sql =
         s"""SELECT payment_date AS paymentDate, amount, sum(amount) OVER (ORDER BY payment_date) AS cumulativeRevenue
            | FROM (

@@ -28,7 +28,7 @@ final class PaymentRowWriter(testTransactor: MySqlTestTransactor)
               | ${row.rental_id},
               | '${row.amount}',
               | '${row.payment_date.format(mysqlDateTimeFormatter)}'
-              |)""".stripMargin,
+              |)""".stripMargin.replaceAll("\\R", "").nn,
   )
 
 object PaymentRowWriter:
