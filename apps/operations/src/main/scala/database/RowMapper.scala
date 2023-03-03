@@ -16,12 +16,10 @@ trait RowMapper[A]:
   def from(rows: js.Array[js.Object]): List[A]
 
 object RowMapper:
-  def from[A](
-      rows: js.Array[js.Object],
-  )(using
+  inline given apply[A](using
       databaseType: DatabaseType[A],
       mirror: Mirror.ProductOf[A],
-  ): List[A] =
+  ): RowMapper[A] = (rows: js.Array[js.Object]) =>
     val fields = databaseType.columns.map { (columnName, columnType) =>
       CIString(columnName) -> columnType
     }.reverse

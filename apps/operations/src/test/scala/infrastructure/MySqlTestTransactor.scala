@@ -2,7 +2,7 @@ package es.eriktorr.lambda4s
 package infrastructure
 
 import database.mysql.MySqlTransactor
-import database.{IoQuery, RowMapper, Transactor}
+import database.{IoQuery, Transactor}
 
 import cats.effect.{IO, Resource}
 import cats.implicits.toFoldableOps
@@ -38,8 +38,3 @@ object MySqlTestTransactor:
   yield MySqlTestTransactor(transactor)
 
   final private case class MysqlTable(table_name: String)
-
-  @nowarn("msg=Declaration is never used") // IntelliJ IDEA
-  private given RowMapper[MysqlTable] with
-    override def from(rows: js.Array[js.Object]): List[MysqlTable] =
-      RowMapper.from[MysqlTable](rows)

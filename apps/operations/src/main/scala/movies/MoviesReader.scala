@@ -2,7 +2,7 @@ package es.eriktorr.lambda4s
 package movies
 
 import database.IoQuery.list
-import database.{RowMapper, Transactor}
+import database.Transactor
 import movies.MoviesReader.{CumulativeRevenue, RatingCounter}
 
 import cats.effect.IO
@@ -34,15 +34,7 @@ object MoviesReader:
       cumulativeRevenue: Double,
   )
 
-  object CumulativeRevenue:
-    given RowMapper[CumulativeRevenue] = (rows: js.Array[js.Object]) =>
-      RowMapper.from[CumulativeRevenue](rows)
-
   final case class RatingCounter(rating: String, count: Int)
-
-  object RatingCounter:
-    given RowMapper[RatingCounter] = (rows: js.Array[js.Object]) =>
-      RowMapper.from[RatingCounter](rows)
 
   def impl(transactor: Transactor)(using logger: Logger[IO]): MoviesReader = new MoviesReader:
     override def filmsByRating: IO[List[RatingCounter]] =
