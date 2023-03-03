@@ -9,6 +9,9 @@ final case class DatabaseType[A](columns: List[(String, String)])
 object DatabaseType:
   import scala.quoted.{Expr, Quotes, Type}
 
+  enum ColumnType:
+    case DateType, DoubleType, IntType, StringType
+
   inline given apply[A]: DatabaseType[A] = DatabaseType[A](DatabaseType.databaseTypesOf[A])
 
   private inline def databaseTypesOf[A]: List[(String, String)] = ${ databaseTypesOfImpl[A] }
@@ -28,10 +31,10 @@ object DatabaseType:
       symbol.caseFields
         .map(field =>
           tpe.memberType(field).asType match
-            case '[Double] => field.name -> "DoubleType"
-            case '[Int] => field.name -> "IntType"
-            case '[LocalDate] => field.name -> "DateType"
-            case '[String] => field.name -> "StringType"
+            case '[Double] => field.name -> ColumnType.DoubleType.toString
+            case '[Int] => field.name -> ColumnType.IntType.toString
+            case '[LocalDate] => field.name -> ColumnType.DateType.toString
+            case '[String] => field.name -> ColumnType.StringType.toString
             case '[unknown] =>
               report.errorAndAbort(s"Unsupported type as database column: ${Type.show[unknown]}"),
         ),

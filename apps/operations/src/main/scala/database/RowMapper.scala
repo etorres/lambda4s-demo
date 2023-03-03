@@ -1,12 +1,16 @@
 package es.eriktorr.lambda4s
 package database
 
+import database.DatabaseType.ColumnType
+import database.DatabaseType.ColumnType.{DateType, DoubleType, IntType, StringType}
+
 import org.typelevel.ci.CIString
 
 import java.time.LocalDate
 import scala.annotation.tailrec
 import scala.deriving.Mirror
 import scala.scalajs.js
+import scala.util.Try
 
 trait RowMapper[A]:
   def from(rows: js.Array[js.Object]): List[A]
@@ -34,16 +38,23 @@ object RowMapper:
             rowMap
               .get(columnName)
               .map { value =>
-                (columnType match
-                  case "DateType" =>
-                    val jsDate = value.asInstanceOf[js.Date]
-                    LocalDate.of(
-                      jsDate.getFullYear().toInt,
-                      jsDate.getMonth().toInt + 1,
-                      jsDate.getDate().toInt,
-                    )
-                  case _ => value
-                ) *: values
+                Try(ColumnType.valueOf(columnType))
+                  .map(_ match
+                    case DateType =>
+                      val jsDate = value.asInstanceOf[js.Date]
+                      LocalDate
+                        .of(
+                          jsDate.getFullYear().toInt,
+                          jsDate.getMonth().toInt + 1,
+                          jsDate.getDate().toInt,
+                        )
+                    case DoubleType | IntType | StringType => value,
+                  )
+                  .getOrElse(
+                    throw new IllegalStateException(
+                      s"Unsupported column type $columnType found for column $columnName",
+                    ),
+                  ) *: values
               }
               .getOrElse(throw new IllegalStateException(s"Missing field: $columnName")),
           )
