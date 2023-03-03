@@ -21,6 +21,7 @@ import org.scalacheck.cats.implicits.*
 import org.scalacheck.effect.PropF.forAllF
 
 import java.time.{LocalDate, LocalDateTime}
+import scala.annotation.tailrec
 
 final class MoviesReaderSuite extends MySqlSuite:
 
@@ -80,7 +81,39 @@ object MoviesReaderSuite:
         staffIdGen = Gen.oneOf(staffIds),
       ),
     )
-    expected = List.empty
+    expected =
+      @tailrec
+      def cumulativeRevenue(
+          payments: List[(LocalDate, Double)],
+          accumulated: List[CumulativeRevenue],
+      ): List[CumulativeRevenue] =
+        payments match
+          case Nil => accumulated
+          case ::(head, next) =>
+            val (paymentDate, amount) = (head._1, head._2)
+            cumulativeRevenue(
+              next,
+              CumulativeRevenue(
+                paymentDate,
+                amount,
+                BigDecimal(
+                  accumulated.headOption
+                    .map(_.cumulativeRevenue)
+                    .getOrElse(0.0d) + amount,
+                ).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble,
+              ) :: accumulated,
+            )
+
+      val dailyPayments = selectedPayments
+        .map(payment => payment.payment_date.toLocalDate.nn -> payment.amount)
+        .groupBy { case (paymentDate, _) => paymentDate }
+        .map { case (paymentDate, payments) =>
+          paymentDate -> payments.map { case (_, amount) => amount }.sum
+        }
+        .toList
+        .sortBy { case (paymentDate, _) => paymentDate }
+
+      cumulativeRevenue(dailyPayments, List.empty).sortBy(_.paymentDate)
   yield CumulativeRevenueTestCase(
     dateTimeRange,
     expected,

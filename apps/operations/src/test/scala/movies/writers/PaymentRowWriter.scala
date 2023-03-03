@@ -1,7 +1,7 @@
 package es.eriktorr.lambda4s
 package movies.writers
 
-import infrastructure.DatabaseTestConfiguration.mysqlDateTimeFormatter
+import database.DatabaseType.dateTimeFormatter
 import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
 import movies.writers.PaymentRowWriter.PaymentRow
 
@@ -27,7 +27,7 @@ final class PaymentRowWriter(testTransactor: MySqlTestTransactor)
               | ${row.staff_id},
               | ${row.rental_id},
               | '${row.amount}',
-              | '${row.payment_date.format(mysqlDateTimeFormatter)}'
+              | '${row.payment_date.format(dateTimeFormatter)}'
               |)""".stripMargin.replaceAll("\\R", "").nn,
   )
 

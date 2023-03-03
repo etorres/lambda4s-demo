@@ -1,7 +1,7 @@
 package es.eriktorr.lambda4s
 package movies.writers
 
-import infrastructure.DatabaseTestConfiguration.mysqlDateTimeFormatter
+import database.DatabaseType.dateTimeFormatter
 import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
 import movies.writers.RentalRowWriter.RentalRow
 
@@ -23,10 +23,10 @@ final class RentalRowWriter(testTransactor: MySqlTestTransactor)
               | staff_id
               |) VALUES (
               | ${row.rental_id},
-              | '${row.rental_date.format(mysqlDateTimeFormatter)}',
+              | '${row.rental_date.format(dateTimeFormatter)}',
               | ${row.inventory_id},
               | ${row.customer_id},
-              | ${row.return_date.fold("NULL")(x => s"'${x.format(mysqlDateTimeFormatter)}'")},
+              | ${row.return_date.fold("NULL")(x => s"'${x.format(dateTimeFormatter)}'")},
               | ${row.staff_id}
               |)""".stripMargin,
   )

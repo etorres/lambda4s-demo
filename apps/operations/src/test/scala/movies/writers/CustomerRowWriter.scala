@@ -3,7 +3,7 @@ package movies.writers
 
 import StringGenerators.stringBetween
 import TemporalGenerators.localDateTimeGen
-import infrastructure.DatabaseTestConfiguration.mysqlDateTimeFormatter
+import database.DatabaseType.dateTimeFormatter
 import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
 import movies.writers.CustomerRowWriter.CustomerRow
 
@@ -33,7 +33,7 @@ final class CustomerRowWriter(testTransactor: MySqlTestTransactor)
               | '${row.email}',
               | ${row.address_id},
               | ${if row.active then 1 else 0},
-              | '${row.create_date.format(mysqlDateTimeFormatter)}'
+              | '${row.create_date.format(dateTimeFormatter)}'
               |)""".stripMargin,
   )
 

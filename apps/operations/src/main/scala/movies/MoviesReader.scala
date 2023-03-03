@@ -38,7 +38,7 @@ object MoviesReader:
     given RowMapper[CumulativeRevenue] = (rows: js.Array[js.Object]) =>
       RowMapper.from[CumulativeRevenue](rows)
 
-  final case class RatingCounter(rating: Rating, count: Int)
+  final case class RatingCounter(rating: String, count: Int)
 
   object RatingCounter:
     given RowMapper[RatingCounter] = (rows: js.Array[js.Object]) =>
