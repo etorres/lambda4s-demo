@@ -2,7 +2,7 @@ package es.eriktorr.lambda4s
 package movies.writers
 
 import database.DatabaseType.dateTimeFormatter
-import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
+import infrastructure.{MySqlTestTransactor, MySqlWriterSuite, RowWriter}
 import movies.writers.PaymentRowWriter.PaymentRow
 
 import cats.effect.IO
@@ -11,8 +11,9 @@ import org.scalacheck.Gen
 import java.time.LocalDateTime
 
 final class PaymentRowWriter(testTransactor: MySqlTestTransactor)
-    extends MySqlWriterSuite[PaymentRow](testTransactor):
-  def add(rows: List[PaymentRow]): IO[Unit] = super.add(
+    extends MySqlWriterSuite[PaymentRow](testTransactor)
+    with RowWriter[PaymentRow]:
+  override def add(rows: List[PaymentRow]): IO[Unit] = super.add(
     rows,
     row => s"""INSERT INTO payment (
               | payment_id,

@@ -4,7 +4,7 @@ package movies.writers
 import StringGenerators.stringBetween
 import TemporalGenerators.localDateTimeGen
 import database.DatabaseType.dateTimeFormatter
-import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
+import infrastructure.{MySqlTestTransactor, MySqlWriterSuite, RowWriter}
 import movies.writers.CustomerRowWriter.CustomerRow
 
 import cats.effect.IO
@@ -13,8 +13,9 @@ import org.scalacheck.{Arbitrary, Gen}
 import java.time.LocalDateTime
 
 final class CustomerRowWriter(testTransactor: MySqlTestTransactor)
-    extends MySqlWriterSuite[CustomerRow](testTransactor):
-  def add(rows: List[CustomerRow]): IO[Unit] = super.add(
+    extends MySqlWriterSuite[CustomerRow](testTransactor)
+    with RowWriter[CustomerRow]:
+  override def add(rows: List[CustomerRow]): IO[Unit] = super.add(
     rows,
     row => s"""INSERT INTO customer (
               | customer_id,

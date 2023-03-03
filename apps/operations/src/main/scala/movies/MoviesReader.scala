@@ -34,7 +34,7 @@ object MoviesReader:
       cumulativeRevenue: Double,
   )
 
-  final case class RatingCounter(rating: String, count: Int)
+  final case class RatingCounter(rating: Rating, count: Int)
 
   def impl(transactor: Transactor)(using logger: Logger[IO]): MoviesReader = new MoviesReader:
     override def filmsByRating: IO[List[RatingCounter]] =

@@ -2,7 +2,7 @@ package es.eriktorr.lambda4s
 package movies.writers
 
 import database.DatabaseType.dateTimeFormatter
-import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
+import infrastructure.{MySqlTestTransactor, MySqlWriterSuite, RowWriter}
 import movies.writers.RentalRowWriter.RentalRow
 
 import cats.effect.IO
@@ -11,8 +11,9 @@ import org.scalacheck.Gen
 import java.time.LocalDateTime
 
 final class RentalRowWriter(testTransactor: MySqlTestTransactor)
-    extends MySqlWriterSuite[RentalRow](testTransactor):
-  def add(rows: List[RentalRow]): IO[Unit] = super.add(
+    extends MySqlWriterSuite[RentalRow](testTransactor)
+    with RowWriter[RentalRow]:
+  override def add(rows: List[RentalRow]): IO[Unit] = super.add(
     rows,
     row => s"""INSERT INTO rental (
               | rental_id,

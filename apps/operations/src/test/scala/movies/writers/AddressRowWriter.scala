@@ -2,7 +2,7 @@ package es.eriktorr.lambda4s
 package movies.writers
 
 import StringGenerators.stringBetween
-import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
+import infrastructure.{MySqlTestTransactor, MySqlWriterSuite, RowWriter}
 import movies.writers.AddressRowWriter.AddressRow
 
 import cats.effect.IO
@@ -11,8 +11,9 @@ import org.scalacheck.Gen
 import java.time.LocalDateTime
 
 final class AddressRowWriter(testTransactor: MySqlTestTransactor)
-    extends MySqlWriterSuite[AddressRow](testTransactor):
-  def add(rows: List[AddressRow]): IO[Unit] = super.add(
+    extends MySqlWriterSuite[AddressRow](testTransactor)
+    with RowWriter[AddressRow]:
+  override def add(rows: List[AddressRow]): IO[Unit] = super.add(
     rows,
     row => s"""INSERT INTO address (
               | address_id,

@@ -2,7 +2,7 @@ package es.eriktorr.lambda4s
 package movies.writers
 
 import StringGenerators.stringBetween
-import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
+import infrastructure.{MySqlTestTransactor, MySqlWriterSuite, RowWriter}
 import movies.writers.StaffRowWriter.StaffRow
 
 import cats.effect.IO
@@ -11,8 +11,9 @@ import org.scalacheck.{Arbitrary, Gen}
 import java.time.LocalDateTime
 
 final class StaffRowWriter(testTransactor: MySqlTestTransactor)
-    extends MySqlWriterSuite[StaffRow](testTransactor):
-  def add(rows: List[StaffRow]): IO[Unit] = super.add(
+    extends MySqlWriterSuite[StaffRow](testTransactor)
+    with RowWriter[StaffRow]:
+  override def add(rows: List[StaffRow]): IO[Unit] = super.add(
     rows,
     row => s"""INSERT INTO staff (
               | staff_id,

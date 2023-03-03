@@ -2,7 +2,7 @@ package es.eriktorr.lambda4s
 package movies.writers
 
 import StringGenerators.stringOfLength
-import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
+import infrastructure.{MySqlTestTransactor, MySqlWriterSuite, RowWriter}
 import movies.writers.LanguageRowWriter.LanguageRow
 
 import cats.effect.IO
@@ -11,8 +11,9 @@ import org.scalacheck.Gen
 import java.time.LocalDateTime
 
 final class LanguageRowWriter(testTransactor: MySqlTestTransactor)
-    extends MySqlWriterSuite[LanguageRow](testTransactor):
-  def add(rows: List[LanguageRow]): IO[Unit] = super.add(
+    extends MySqlWriterSuite[LanguageRow](testTransactor)
+    with RowWriter[LanguageRow]:
+  override def add(rows: List[LanguageRow]): IO[Unit] = super.add(
     rows,
     row => s"""INSERT INTO language (
               | language_id,

@@ -2,7 +2,7 @@ package es.eriktorr.lambda4s
 package database
 
 import database.DatabaseType.ColumnType
-import database.DatabaseType.ColumnType.{DateType, DoubleType, IntType, StringType}
+import database.DatabaseType.ColumnType.{DateType, DoubleType, EnumType, IntType, StringType}
 
 import org.typelevel.ci.CIString
 
@@ -46,6 +46,7 @@ object RowMapper:
                           jsDate.getMonth().toInt + 1,
                           jsDate.getDate().toInt,
                         )
+                    case EnumType => value
                     case DoubleType | IntType | StringType => value,
                   )
                   .getOrElse(

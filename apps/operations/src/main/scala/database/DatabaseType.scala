@@ -10,7 +10,7 @@ object DatabaseType:
   import scala.quoted.{Expr, Quotes, Type}
 
   enum ColumnType:
-    case DateType, DoubleType, IntType, StringType
+    case DateType, DoubleType, EnumType, IntType, StringType
 
   inline given apply[A]: DatabaseType[A] = DatabaseType[A](DatabaseType.databaseTypesOf[A])
 
@@ -35,6 +35,7 @@ object DatabaseType:
             case '[Int] => field.name -> ColumnType.IntType.toString
             case '[LocalDate] => field.name -> ColumnType.DateType.toString
             case '[String] => field.name -> ColumnType.StringType.toString
+            case '[reflect.Enum] => field.name -> ColumnType.EnumType.toString
             case '[unknown] =>
               report.errorAndAbort(s"Unsupported type as database column: ${Type.show[unknown]}"),
         ),

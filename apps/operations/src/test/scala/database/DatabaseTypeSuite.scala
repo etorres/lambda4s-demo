@@ -17,15 +17,20 @@ final class DatabaseTypeSuite extends FunSuite:
           "zipcode" -> "IntType",
           "price" -> "DoubleType",
           "lastUpdate" -> "DateType",
+          "ranking" -> "EnumType",
         ),
       ),
     )
   }
 
 object DatabaseTypeSuite:
+  private enum Ranking:
+    case First, Second, Third, Looser
+
   final private case class TestCaseClass(
       address: String,
       zipcode: Int,
       price: Double,
       lastUpdate: LocalDate,
+      ranking: Ranking,
   )

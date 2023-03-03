@@ -1,7 +1,7 @@
 package es.eriktorr.lambda4s
 package movies.writers
 
-import infrastructure.{MySqlTestTransactor, MySqlWriterSuite}
+import infrastructure.{MySqlTestTransactor, MySqlWriterSuite, RowWriter}
 import movies.writers.StoreRowWriter.StoreRow
 
 import cats.effect.IO
@@ -10,8 +10,9 @@ import org.scalacheck.Gen
 import java.time.LocalDateTime
 
 final class StoreRowWriter(testTransactor: MySqlTestTransactor)
-    extends MySqlWriterSuite[StoreRow](testTransactor):
-  def add(rows: List[StoreRow]): IO[Unit] = super.add(
+    extends MySqlWriterSuite[StoreRow](testTransactor)
+    with RowWriter[StoreRow]:
+  override def add(rows: List[StoreRow]): IO[Unit] = super.add(
     rows,
     row => s"""INSERT INTO store (
               | store_id,
