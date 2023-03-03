@@ -30,13 +30,14 @@ import java.time.{LocalDate, LocalDateTime}
 import scala.annotation.tailrec
 
 final class MoviesReaderSuite extends MySqlSuite:
-  test("should count the number of films grouped by their rating".ignore) { // TODO
+  test("should count the number of films grouped by their rating") {
     forAllF(filmsByRatingTestCaseGen) { testCase =>
       testWith(
         "Films grouped by their rating are not the same",
         testTransactor => FilmRowWriter(testTransactor),
         moviesReader => moviesReader.filmsByRating,
         testCase,
+        Some(Ordering.by[RatingCounter, String](_.rating.name)),
       )
     }
   }
@@ -57,6 +58,7 @@ final class MoviesReaderSuite extends MySqlSuite:
       rowWriter: MySqlTestTransactor => RowWriter[R],
       run: MoviesReader => IO[List[A]],
       testCase: TestCase[A, R],
+      sortWith: Option[Ordering[A]] = None,
   ) = MySqlTestTransactor
     .of(SakilaMySqlTest, munitExecutionContext)
     .use(testTransactor =>
@@ -69,9 +71,12 @@ final class MoviesReaderSuite extends MySqlSuite:
         yield ()
         moviesReader = MoviesReader.impl(testTransactor.transactor)(using logger)
         obtained <- run(moviesReader)
-      yield obtained,
+      yield sortWith.fold(obtained)(ordering => obtained.sorted(using ordering)),
     )
-    .assertEquals(testCase.expected, clue)
+    .assertEquals(
+      sortWith.fold(testCase.expected)(ordering => testCase.expected.sorted(using ordering)),
+      clue,
+    )
 
 object MoviesReaderSuite:
   sealed private trait TestCase[A, R]:

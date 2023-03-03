@@ -2,10 +2,11 @@ package es.eriktorr.lambda4s
 package movies
 
 import database.IoQuery.list
-import database.Transactor
+import database.{DatabaseTypeHints, Transactor}
 import movies.MoviesReader.{CumulativeRevenue, RatingCounter}
 
 import cats.effect.IO
+import org.typelevel.ci.CIStringSyntax
 import org.typelevel.log4cats.Logger
 
 import java.time.format.DateTimeFormatter
@@ -35,6 +36,10 @@ object MoviesReader:
   )
 
   final case class RatingCounter(rating: Rating, count: Int)
+
+  given DatabaseTypeHints = DatabaseTypeHints(
+    Map((ci"rating", (rating: String) => Rating.fromNameOrFail(rating))),
+  )
 
   def impl(transactor: Transactor)(using logger: Logger[IO]): MoviesReader = new MoviesReader:
     override def filmsByRating: IO[List[RatingCounter]] =

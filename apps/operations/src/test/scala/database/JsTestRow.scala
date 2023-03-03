@@ -7,16 +7,26 @@ import scala.scalajs.js
 
 @js.native
 trait JsTestRow extends StObject:
-  var name: String = js.native
-  var value: Int = js.native
+  var address: String = js.native
+  var zipcode: Int = js.native
   var price: Double = js.native
+  var lastUpdate: js.Date = js.native
+  var ranking: String = js.native
 
 object JsTestRow:
   @scala.inline
-  def apply(name: String, value: Int, price: Double): JsTestRow =
+  def apply(
+      address: String,
+      zipcode: Int,
+      price: Double,
+      lastUpdate: js.Date,
+      ranking: String,
+  ): JsTestRow =
     val __obj = js.Dynamic.literal(
-      name = name.asInstanceOf[js.Any],
-      value = value.asInstanceOf[js.Any],
+      address = address.asInstanceOf[js.Any],
+      zipcode = zipcode.asInstanceOf[js.Any],
       price = price.asInstanceOf[js.Any],
+      lastUpdate = lastUpdate.asInstanceOf[js.Any],
+      ranking = ranking.asInstanceOf[js.Any],
     )
     __obj.asInstanceOf[JsTestRow]

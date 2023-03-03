@@ -11,3 +11,10 @@ enum Rating(val recommendedAge: Int, val name: String):
   case PG_13 extends Rating(13, "PG-13")
   case R extends Rating(18, "R")
   case NC_17 extends Rating(18, "NC-17")
+
+object Rating:
+  def fromName(name: String): Option[Rating] = Rating.values.find(_.name == name)
+
+  def fromNameOrFail(name: String): Rating = fromName(name).getOrElse(
+    throw new IllegalArgumentException(s"No rating found with name: $name"),
+  )
