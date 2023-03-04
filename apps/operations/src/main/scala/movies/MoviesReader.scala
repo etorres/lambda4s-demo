@@ -43,11 +43,10 @@ object MoviesReader:
 
   def impl(transactor: Transactor)(using logger: Logger[IO]): MoviesReader = new MoviesReader:
     override def filmsByRating: IO[List[RatingCounter]] =
-      val sql =
-        """SELECT rating, count(*) AS count
-          | FROM film
-          | GROUP BY rating
-          |""".stripMargin
+      val sql = """SELECT rating, count(*) AS count
+                  | FROM film
+                  | GROUP BY rating
+                  |""".stripMargin
       logger.debug(s"Query: $sql") *> transactor.query(sql).list[RatingCounter]
 
     override def cumulativeRevenueDuring(
