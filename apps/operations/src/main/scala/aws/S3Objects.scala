@@ -23,6 +23,7 @@ object S3Objects:
       )
       for
         request <- signer.sign(bucket = bucket, metadata = listObjectsV2MetadataFrom(objectKey))
+        _ = println("\n >> REQUEST\n") // TODO
         bodyContent <- httpClient.expectOr[String](request)(response =>
           response
             .as[String]
@@ -30,7 +31,8 @@ object S3Objects:
               IO.raiseError(AwsClientError(response.status.code, body.getBytes("UTF-8").nn)),
             ),
         )
-        existsInDataLake =
+        _ = println("\n >> BODY_CONTENT\n") // TODO
+        exists =
           val keyCountPattern = raw"<KeyCount>1</KeyCount>".r.unanchored
           val keyPattern = raw"<Key>(?<key>[a-zA-Z0-9\-_=/]+)</Key>".r.unanchored
           val oneLineXml = bodyContent.replaceAll("\\R", "").nn
@@ -38,7 +40,8 @@ object S3Objects:
             case keyPattern(key) => key == objectKey
             case _ => false
           )
-      yield existsInDataLake
+        _ = println("\n >> EXIST?\n") // TODO
+      yield exists
 
     private def listObjectsV2MetadataFrom(objectKey: String) =
       Metadata(
