@@ -32,6 +32,7 @@ lazy val commons = project
   .settings(
     libraryDependencies ++= Seq(
       "io.github.cquiroz" %%% "scala-java-time" % "2.5.0" % Optional,
+      "is.cir" %%% "ciris" % "3.1.0",
       "org.log4s" %%% "log4s" % "1.10.0" % Optional,
       "org.typelevel" %%% "cats-effect" % "3.4.8" % Optional,
       "org.typelevel" %%% "log4cats-core" % "2.5.0" % Optional,
@@ -76,7 +77,10 @@ lazy val operations = project
     ),
     // Waiting for Yarn version 2 to enable: useYarn := true
   )
-  .dependsOn(`commons` % "test->test;compile->compile")
+  .dependsOn(
+    `commons` % "test->test;compile->compile",
+    `smithy4s-aws-clients` % "test->test;compile->compile",
+  )
 
 lazy val `smithy4s-aws-clients` = project
   .in(file("libs/smithy4s-aws-clients"))

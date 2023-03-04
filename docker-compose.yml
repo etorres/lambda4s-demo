@@ -7,8 +7,8 @@ services:
   mysql:
     image: mysql:8
     command: --default-authentication-plugin=mysql_native_password
-    container_name: mysql.test
     hostname: mysql.test
+    container_name: mysql.test
     environment:
       MYSQL_ROOT_PASSWORD: s3c4Et
       MYSQL_USER: test
@@ -20,11 +20,25 @@ services:
 
   adminer:
     image: adminer
-    hostname: adminer
-    container_name: adminer
+    hostname: adminer.test
+    container_name: adminer.test
+    environment:
+      ADMINER_DESIGN: dracula
     ports:
       - "8080:8080"
     depends_on:
       - mysql
+
+  localstack:
+    image: localstack/localstack
+    hostname: localstack.test
+    container_name: localstack.test
     environment:
-      ADMINER_DESIGN: dracula
+      - LOCALSTACK_DEBUG=0
+      - LOCALSTACK_DOCKER_HOST=unix:///var/run/docker.sock
+      - LOCALSTACK_PERSISTENCE=0
+    ports:
+      - "4566:4566"
+    volumes:
+      - "${LOCALSTACK_VOLUME_DIR:-./.localstack}:/var/lib/localstack"
+      - "/var/run/docker.sock:/var/run/docker.sock"
