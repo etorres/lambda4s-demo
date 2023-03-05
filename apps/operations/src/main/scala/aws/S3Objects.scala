@@ -30,7 +30,6 @@ object S3Objects:
             .get(uri"${request.uri}")
             .headers(request.headers.headers.map(x => x.name.toString -> x.value).toMap)
             .send(backend)
-          _ = println(s"\n >> RESPONSE: ${response.headers}\n")
           body <- response.body
             .fold(
               error =>
