@@ -1,32 +1,34 @@
 package es.eriktorr.lambda4s
 package aws
 
-import aws.S3ResponseParserSuite.{listObjectsV2OutputResponse, listObjectsV2Response}
+import aws.S3ResponseParserSuite.{
+  listObjectsV2OutputResponse,
+  listObjectsV2OutputResponseNoKeyFound,
+  listObjectsV2Response,
+  otherXml,
+}
 
-import cats.effect.IO
-import fs2.Stream
-import fs2.data.xml.xpath.filter
-import fs2.data.xml.xpath.literals.xpath
-import fs2.data.xml.{collector, events}
 import munit.CatsEffectSuite
 
 final class S3ResponseParserSuite extends CatsEffectSuite:
   test("should parse s3 list objects v2 response using default provider") {
-    testWith(listObjectsV2Response)
+    testWith(listObjectsV2Response, 1L)
   }
 
   test("should parse s3 list objects v2 response using asf provider") {
-    testWith(listObjectsV2OutputResponse)
+    testWith(listObjectsV2OutputResponse, 1L)
   }
 
-  private def testWith(xml: String) =
-    (for keysFound <- Stream
-        .emit(xml)
-        .through(events[IO, String]())
-        .through(filter.collect(xpath"/*/Contents/Key", collector.show, deterministic = false))
-        .compile
-        .count
-    yield keysFound).assertEquals(1L)
+  test("should not found any key in a valid document") {
+    testWith(listObjectsV2OutputResponseNoKeyFound, 0L)
+  }
+
+  test("should not found any key in an unrelated document") {
+    testWith(otherXml, 0L)
+  }
+
+  private def testWith(xml: String, expected: Long) =
+    S3ResponseParser.keysFoundIn(xml, "test-object-key").assertEquals(expected)
 
 object S3ResponseParserSuite:
   private val listObjectsV2Response =
@@ -63,3 +65,30 @@ object S3ResponseParserSuite:
       |  <MaxKeys>1</MaxKeys>
       |  <KeyCount>1</KeyCount>
       |</ListObjectsV2Output>""".stripMargin
+
+  private val listObjectsV2OutputResponseNoKeyFound =
+    """<?xml version='1.0' encoding='utf-8'?>
+      |<ListObjectsV2Output>
+      |  <IsTruncated>false</IsTruncated>
+      |  <Contents>
+      |    <Key>test-object-key0</Key>
+      |    <LastModified>2023-03-05T13:51:48Z</LastModified>
+      |    <ETag>"6f5902ac237024bdd0c176cb93063dc4"</ETag>
+      |    <Size>12</Size>
+      |    <StorageClass>STANDARD</StorageClass>
+      |  </Contents>
+      |  <Name>test-bucket</Name>
+      |  <Prefix>test-object-key</Prefix>
+      |  <MaxKeys>1</MaxKeys>
+      |  <KeyCount>1</KeyCount>
+      |</ListObjectsV2Output>""".stripMargin
+
+  private val otherXml = """<?xml version="1.0" encoding="UTF-8"?>
+                           |<bookstore>
+                           |  <book>
+                           |    <title lang="en">Harry Potter</title>
+                           |    <author>J K. Rowling</author>
+                           |    <year>2005</year>
+                           |    <price>29.99</price>
+                           |  </book>
+                           |</bookstore>""".stripMargin
