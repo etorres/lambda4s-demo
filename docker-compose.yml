@@ -37,6 +37,7 @@ services:
       - LOCALSTACK_DEBUG=0
       - LOCALSTACK_DOCKER_HOST=unix:///var/run/docker.sock
       - LOCALSTACK_PERSISTENCE=0
+      - PROVIDER_OVERRIDE_S3=asf
     ports:
       - "4566:4566"
     volumes:

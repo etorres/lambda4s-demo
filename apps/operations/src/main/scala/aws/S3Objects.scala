@@ -30,6 +30,7 @@ object S3Objects:
             .get(uri"${request.uri}")
             .headers(request.headers.headers.map(x => x.name.toString -> x.value).toMap)
             .send(backend)
+          _ = println(s"\n >> RESPONSE: ${response.headers}\n")
           body <- response.body
             .fold(
               error =>
@@ -74,7 +75,6 @@ object S3Objects:
       request <- signer.sign(bucket = bucket, metadata = listObjectsV2MetadataFrom(objectKey))
       bodyContent <- requestHandler(request)
       exists =
-        println(s"\n >> HERE: $bodyContent\n")
         val keyCountPattern = raw"<KeyCount>1</KeyCount>".r.unanchored
         val keyPattern = raw"<Key>(?<key>[a-zA-Z0-9\-_=/]+)</Key>".r.unanchored
         val oneLineXml = bodyContent.replaceAll("\\R", "").nn
