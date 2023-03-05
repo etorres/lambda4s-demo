@@ -14,14 +14,14 @@ final class S3ObjectsSuite extends CatsEffectSuite:
       .default[IO]
       .build
       .map(Http4sLogger(logHeaders = true, logBody = true)(_))
-      .use(S3Objects.impl(awsConfiguration, _).exists("test_bucket", "test_object_key"))
+      .use(S3Objects.impl(awsConfiguration, _).exists("test-bucket", "test-object-key"))
       .assertEquals(true)
   }
 
   test("should check if an object key exist in a bucket using sttp") {
     Resource
       .make(IO.delay(FetchCatsBackend[IO]()))(_.close())
-      .use(S3Objects.impl(awsConfiguration, _).exists("test_bucket", "test_object_key"))
+      .use(S3Objects.impl(awsConfiguration, _).exists("test-bucket", "test-object-key"))
       .assertEquals(true)
   }
 

@@ -59,7 +59,7 @@ lazy val notifications = project
 lazy val operations = project
   .in(file("apps/operations"))
   .enablePlugins(LambdaJSPlugin, ScalaJSBundlerPlugin, ScalablyTypedConverterPlugin)
-  .configure(baseSettings, scalablyTypedSettings)
+  .configure(baseSettings, nodeJsSettings)
   .settings(
     libraryDependencies ++= Seq(
       "com.comcast" %%% "ip4s-core" % "3.2.0",
@@ -86,7 +86,7 @@ lazy val operations = project
 lazy val `smithy4s-aws-clients` = project
   .in(file("libs/smithy4s-aws-clients"))
   .enablePlugins(ScalaJSPlugin, Smithy4sCodegenPlugin)
-  .configure(baseSettings, scalablyTypedSettings)
+  .configure(baseSettings, nodeJsSettings)
   .settings(
     idePackagePrefix := None,
     libraryDependencies ++= Seq(
@@ -115,7 +115,7 @@ lazy val baseSettings: Project => Project = _.settings(
   Test / testOptions += Tests.Argument(MUnitFramework, "--exclude-tags=online"),
 )
 
-lazy val scalablyTypedSettings: Project => Project =
+lazy val nodeJsSettings: Project => Project =
   _.settings(
     Global / stQuiet := true,
     scalaJSLinkerConfig ~= (_

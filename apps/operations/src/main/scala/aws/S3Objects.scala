@@ -74,6 +74,7 @@ object S3Objects:
       request <- signer.sign(bucket = bucket, metadata = listObjectsV2MetadataFrom(objectKey))
       bodyContent <- requestHandler(request)
       exists =
+        println(s"\n >> HERE: $bodyContent\n")
         val keyCountPattern = raw"<KeyCount>1</KeyCount>".r.unanchored
         val keyPattern = raw"<Key>(?<key>[a-zA-Z0-9\-_=/]+)</Key>".r.unanchored
         val oneLineXml = bodyContent.replaceAll("\\R", "").nn
