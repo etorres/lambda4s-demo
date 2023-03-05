@@ -6,10 +6,6 @@ import org.http4s.Request
 import org.http4s.client.Client
 import smithy4s.aws.*
 import smithy4s.http.Metadata
-import sttp.capabilities.WebSockets
-import sttp.client3.SttpBackend
-
-import java.net.URI
 
 trait S3Objects:
   def exists(bucket: String, objectKey: String): IO[Boolean]
@@ -17,45 +13,24 @@ trait S3Objects:
 object S3Objects:
   def impl(
       awsConfiguration: AwsConfiguration,
-      backend: SttpBackend[IO, WebSockets],
-  ): S3Objects = (bucket: String, objectKey: String) =>
-    import sttp.client3.{UriContext, basicRequest}
-    exists(
-      awsConfiguration,
-      bucket,
-      objectKey,
-      request =>
-        for
-          response <- basicRequest
-            .get(uri"${request.uri}")
-            .headers(request.headers.headers.map(x => x.name.toString -> x.value).toMap)
-            .send(backend)
-          body <- response.body
-            .fold(
-              error =>
-                IO.raiseError(AwsClientError(response.code.code, error.getBytes("UTF-8").nn)),
-              IO.pure,
-            )
-        yield body,
-    )
+      httpClient: Client[IO],
+  ): S3Objects = impl(
+    awsConfiguration,
+    request =>
+      httpClient.expectOr[String](request)(response =>
+        response
+          .as[String]
+          .flatMap(body =>
+            IO.raiseError(AwsClientError(response.status.code, body.getBytes("UTF-8").nn)),
+          ),
+      ),
+  )
 
   def impl(
       awsConfiguration: AwsConfiguration,
-      httpClient: Client[IO],
+      requestHandler: Request[IO] => IO[String],
   ): S3Objects = (bucket: String, objectKey: String) =>
-    exists(
-      awsConfiguration,
-      bucket,
-      objectKey,
-      request =>
-        httpClient.expectOr[String](request)(response =>
-          response
-            .as[String]
-            .flatMap(body =>
-              IO.raiseError(AwsClientError(response.status.code, body.getBytes("UTF-8").nn)),
-            ),
-        ),
-    )
+    exists(awsConfiguration, bucket, objectKey, requestHandler)
 
   private def exists(
       awsConfiguration: AwsConfiguration,
