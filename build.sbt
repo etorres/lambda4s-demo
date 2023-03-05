@@ -86,7 +86,7 @@ lazy val operations = project
 lazy val `smithy4s-aws-clients` = project
   .in(file("libs/smithy4s-aws-clients"))
   .enablePlugins(ScalaJSPlugin, Smithy4sCodegenPlugin)
-  .configure(baseSettings)
+  .configure(baseSettings, scalablyTypedSettings)
   .settings(
     idePackagePrefix := None,
     libraryDependencies ++= Seq(

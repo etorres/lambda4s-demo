@@ -9,19 +9,19 @@ import smithy4s.http.Metadata
 import sttp.capabilities.WebSockets
 import sttp.client3.SttpBackend
 
+import java.net.URI
+
 trait S3Objects:
   def exists(bucket: String, objectKey: String): IO[Boolean]
 
 object S3Objects:
   def impl(
-      awsCredentials: AwsCredentials,
-      awsRegion: AwsRegion,
+      awsConfiguration: AwsConfiguration,
       backend: SttpBackend[IO, WebSockets],
   ): S3Objects = (bucket: String, objectKey: String) =>
-    import sttp.client3.{basicRequest, UriContext}
+    import sttp.client3.{UriContext, basicRequest}
     exists(
-      awsCredentials,
-      awsRegion,
+      awsConfiguration,
       bucket,
       objectKey,
       request =>
@@ -40,13 +40,11 @@ object S3Objects:
     )
 
   def impl(
-      awsCredentials: AwsCredentials,
-      awsRegion: AwsRegion,
+      awsConfiguration: AwsConfiguration,
       httpClient: Client[IO],
   ): S3Objects = (bucket: String, objectKey: String) =>
     exists(
-      awsCredentials,
-      awsRegion,
+      awsConfiguration,
       bucket,
       objectKey,
       request =>
@@ -60,16 +58,17 @@ object S3Objects:
     )
 
   private def exists(
-      awsCredentials: AwsCredentials,
-      awsRegion: AwsRegion,
+      awsConfiguration: AwsConfiguration,
       bucket: String,
       objectKey: String,
       requestHandler: Request[IO] => IO[String],
   ): IO[Boolean] =
     val signer = S3Signer.impl(
-      IO.pure(awsCredentials),
-      IO.pure(awsRegion),
+      IO.pure(awsConfiguration.credentials),
+      IO.pure(awsConfiguration.region.getOrElse(AwsRegion.EU_WEST_1)),
       IO.realTime.map(_.toSeconds).map(Timestamp(_, 0)),
+      IO.pure(awsConfiguration.s3AccessStyle),
+      IO.pure(awsConfiguration.s3Endpoint),
     )
     for
       request <- signer.sign(bucket = bucket, metadata = listObjectsV2MetadataFrom(objectKey))

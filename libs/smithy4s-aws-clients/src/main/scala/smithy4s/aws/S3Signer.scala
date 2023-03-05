@@ -4,8 +4,11 @@ import cats.effect.IO
 import org.http4s.client.dsl as http4sDsl
 import org.http4s.{Header, Method, Request, Uri}
 import org.typelevel.ci.CIStringSyntax
+import smithy4s.aws.S3AccessStyle.{PathStyle, VirtualHostedStyle}
 import smithy4s.http.Metadata
 import smithy4s.http.internals.URIEncoderDecoder.encode as uriEncode
+
+import java.net.URI
 
 /** Amazon S3 AWS4 request signer.
   * @see
@@ -27,18 +30,22 @@ object S3Signer:
       awsCredentialsIO: IO[AwsCredentials],
       awsRegionIO: IO[AwsRegion],
       timestampIO: IO[Timestamp],
+      s3AccessStyleIO: IO[S3AccessStyle],
+      s3EndpointIO: IO[Option[URI]],
   ): S3Signer = (body: Option[String], bucket: String, metadata: Metadata) =>
     for
       awsCredentials <- awsCredentialsIO
       awsRegion <- awsRegionIO
       timestamp <- timestampIO
+      s3AccessStyle <- s3AccessStyleIO
+      s3Endpoint <- s3EndpointIO
       (host, headers) =
         import smithy4s.aws.kernel.AwsCrypto.*
 
         val credentialsScope =
           List(timestamp.conciseDate, awsRegion.value, serviceName, aws4Request).mkString("/")
 
-        val host = s"$bucket.$serviceName.${awsRegion.value}.amazonaws.com"
+        val host = hostFrom(awsRegion, bucket, s3AccessStyle, s3Endpoint)
 
         val httpMethod = Method.GET.name.toUpperCase
 
@@ -109,10 +116,35 @@ object S3Signer:
         (host, headers)
       target <- IO.fromEither(
         Uri
-          .fromString(s"https://$host")
+          .fromString(uriFrom(bucket, host, s3AccessStyle, s3Endpoint))
           .map(_.withQueryParams(metadata.queryFlattened.sortBy(_._1).toMap)),
       )
       request =
         import http4sDsl.io.*
         Method.GET(target, headers)
     yield request
+
+  private def hostFrom(
+      awsRegion: AwsRegion,
+      bucket: String,
+      s3AccessStyle: S3AccessStyle,
+      s3Endpoint: Option[URI],
+  ) =
+    val baseHost =
+      s3Endpoint.map(_.getHost).getOrElse(s"$serviceName.${awsRegion.value}.amazonaws.com")
+    s3AccessStyle match
+      case PathStyle => baseHost
+      case VirtualHostedStyle => s"$bucket.$baseHost"
+
+  private def uriFrom(
+      bucket: String,
+      host: String,
+      s3AccessStyle: S3AccessStyle,
+      s3Endpoint: Option[URI],
+  ) =
+    val baseUri = s3Endpoint
+      .map(uri => s"${uri.getScheme}://${uri.getHost}:${uri.getPort}")
+      .getOrElse(s"https://$host")
+    s3AccessStyle match
+      case PathStyle => s"$baseUri/$bucket"
+      case VirtualHostedStyle => baseUri

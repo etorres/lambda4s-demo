@@ -1,11 +1,13 @@
 package smithy4s.aws
 
+import smithy4s.aws
+
 import java.net.URI
 
 enum AwsTestConfiguration(val awsConfiguration: AwsConfiguration):
   case LocalStack
       extends AwsTestConfiguration(
-        AwsConfiguration(
+        aws.AwsConfiguration(
           AwsCredentials
             .Default("AKIAIOSFODNN7EXAMPLE", "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY", None),
           Some(AwsRegion.EU_WEST_1),
