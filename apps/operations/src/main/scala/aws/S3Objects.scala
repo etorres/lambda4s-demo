@@ -48,14 +48,7 @@ object S3Objects:
     for
       request <- signer.sign(bucket = bucket, metadata = listObjectsV2MetadataFrom(objectKey))
       bodyContent <- requestHandler(request)
-      exists =
-        val keyCountPattern = raw"<KeyCount>1</KeyCount>".r.unanchored
-        val keyPattern = raw"<Key>(?<key>[a-zA-Z0-9\-_=/]+)</Key>".r.unanchored
-        val oneLineXml = bodyContent.replaceAll("\\R", "").nn
-        keyCountPattern.matches(oneLineXml) && (oneLineXml match
-          case keyPattern(key) => key == objectKey
-          case _ => false
-        )
+      exists <- S3ResponseParser.keysFoundIn(bodyContent, objectKey).map(_ == 1L)
     yield exists
 
   private def listObjectsV2MetadataFrom(objectKey: String) = Metadata(query =
