@@ -16,8 +16,6 @@ final class S3SignerSuite extends CatsEffectSuite:
         IO.pure(awsConfiguration.credentials),
         IO.pure(awsConfiguration.region.get),
         IO.pure(timestamp),
-        IO.pure(awsConfiguration.s3AccessStyle),
-        IO.pure(awsConfiguration.s3Endpoint),
       )
       (for
         signedRequest <- signer

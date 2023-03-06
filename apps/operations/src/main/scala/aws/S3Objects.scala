@@ -42,8 +42,6 @@ object S3Objects:
       IO.pure(awsConfiguration.credentials),
       IO.pure(awsConfiguration.region.getOrElse(AwsRegion.EU_WEST_1)),
       IO.realTime.map(_.toSeconds).map(Timestamp(_, 0)),
-      IO.pure(awsConfiguration.s3AccessStyle),
-      IO.pure(awsConfiguration.s3Endpoint),
     )
     for
       request <- signer.sign(bucket = bucket, metadata = listObjectsV2MetadataFrom(objectKey))
