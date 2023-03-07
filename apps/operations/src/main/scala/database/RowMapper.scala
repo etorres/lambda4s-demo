@@ -3,6 +3,7 @@ package database
 
 import database.DatabaseType.ColumnType
 import database.DatabaseType.ColumnType.*
+import refined.types.NonEmptyString
 
 import org.typelevel.ci.CIString
 
@@ -50,7 +51,14 @@ object RowMapper:
                       .hintFor(columnName)
                       .map(_.apply(jsString))
                       .getOrElse(
-                        throw new IllegalStateException(s"No hint found for column: $columnName"),
+                        throw IllegalStateException(s"No hint found for column: $columnName"),
+                      )
+                  case NonEmptyStringType =>
+                    val jsString = value.asInstanceOf[String]
+                    NonEmptyString
+                      .fromString(jsString)
+                      .getOrElse(
+                        throw IllegalStateException(s"Unsupported value for column: $columnName"),
                       )
                   case DoubleType | IntType | StringType => value
                 ) *: values

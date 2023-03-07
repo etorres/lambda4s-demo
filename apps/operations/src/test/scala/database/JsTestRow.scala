@@ -12,6 +12,7 @@ trait JsTestRow extends StObject:
   var price: Double = js.native
   var lastUpdate: js.Date = js.native
   var ranking: String = js.native
+  var password: String = js.native
 
 object JsTestRow:
   @scala.inline
@@ -21,6 +22,7 @@ object JsTestRow:
       price: Double,
       lastUpdate: js.Date,
       ranking: String,
+      password: String,
   ): JsTestRow =
     val __obj = js.Dynamic.literal(
       address = address.asInstanceOf[js.Any],
@@ -28,5 +30,6 @@ object JsTestRow:
       price = price.asInstanceOf[js.Any],
       lastUpdate = lastUpdate.asInstanceOf[js.Any],
       ranking = ranking.asInstanceOf[js.Any],
+      password = password.asInstanceOf[js.Any],
     )
     __obj.asInstanceOf[JsTestRow]

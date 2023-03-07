@@ -2,6 +2,7 @@ package es.eriktorr.lambda4s
 package database
 
 import database.TestRow.Ranking
+import refined.types.NonEmptyString
 
 import org.typelevel.ci.CIStringSyntax
 
@@ -13,6 +14,7 @@ final case class TestRow(
     price: Double,
     lastUpdate: LocalDate,
     ranking: Ranking,
+    password: NonEmptyString,
 )
 
 object TestRow:

@@ -22,6 +22,9 @@ object NonEmptyString:
   def fromString(value: String): Option[NonEmptyString] =
     if value.nonEmpty then Some(NonEmptyString(value)) else None
 
+  def unsafeFrom(value: String): NonEmptyString =
+    fromString(value).getOrElse(throw IllegalArgumentException("Invalid value found"))
+
   def unapply(nonEmptyString: NonEmptyString): Option[String] = Some(nonEmptyString.value)
 
   given Show[NonEmptyString] = Show.fromToString[NonEmptyString]

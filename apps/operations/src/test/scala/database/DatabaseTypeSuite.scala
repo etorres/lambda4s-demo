@@ -16,6 +16,7 @@ final class DatabaseTypeSuite extends FunSuite:
           "price" -> "DoubleType",
           "lastUpdate" -> "DateType",
           "ranking" -> "EnumType",
+          "password" -> "NonEmptyStringType",
         ),
       ),
     )

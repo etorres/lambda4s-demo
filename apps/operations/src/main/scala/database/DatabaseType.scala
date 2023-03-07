@@ -1,6 +1,8 @@
 package es.eriktorr.lambda4s
 package database
 
+import refined.types.NonEmptyString
+
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -10,7 +12,7 @@ object DatabaseType:
   import scala.quoted.{Expr, Quotes, Type}
 
   enum ColumnType:
-    case DateType, DoubleType, EnumType, IntType, StringType
+    case DateType, DoubleType, EnumType, IntType, NonEmptyStringType, StringType
 
   inline given apply[A]: DatabaseType[A] = DatabaseType[A](DatabaseType.databaseTypesOf[A])
 
@@ -34,6 +36,7 @@ object DatabaseType:
             case '[Double] => field.name -> ColumnType.DoubleType.toString
             case '[Int] => field.name -> ColumnType.IntType.toString
             case '[LocalDate] => field.name -> ColumnType.DateType.toString
+            case '[NonEmptyString] => field.name -> ColumnType.NonEmptyStringType.toString
             case '[String] => field.name -> ColumnType.StringType.toString
             case '[reflect.Enum] => field.name -> ColumnType.EnumType.toString
             case '[unknown] =>
