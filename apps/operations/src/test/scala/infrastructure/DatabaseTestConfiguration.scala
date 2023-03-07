@@ -3,6 +3,7 @@ package infrastructure
 
 import database.DatabaseConfiguration
 
+import ciris.Secret
 import com.comcast.ip4s.{host, port}
 
 enum DatabaseTestConfiguration(val config: DatabaseConfiguration):
@@ -19,7 +20,7 @@ object DatabaseTestConfiguration:
   final private lazy val mySqlTest = DatabaseConfiguration(
     database = "<database>",
     host = host"mysql.test",
-    password = "changeMe",
+    password = Secret("changeMe"),
     port = port"3306",
     user = "test",
   )

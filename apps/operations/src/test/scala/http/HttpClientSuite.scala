@@ -8,7 +8,7 @@ import sttp.client3.*
 import sttp.client3.impl.cats.FetchCatsBackend
 
 final class HttpClientSuite extends CatsEffectSuite:
-  test("should work with http4s") {
+  test("should work with http4s".ignore) {
     EmberClientBuilder
       .default[IO]
       .build

@@ -33,7 +33,7 @@ object MySqlTransactor:
             ConnectionConfig()
               .setHost(databaseConfiguration.host.toString)
               .setUser(databaseConfiguration.user)
-              .setPassword(databaseConfiguration.password)
+              .setPassword(databaseConfiguration.password.value)
               .setPort(databaseConfiguration.port.value.toDouble)
               .setDatabase(databaseConfiguration.database),
           ).toIO,
