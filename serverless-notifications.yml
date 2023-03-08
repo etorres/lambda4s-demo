@@ -1,0 +1,27 @@
+service: lambda4s-notifications
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  stage: prd
+  runtime: nodejs16.x # nodejs18.x
+  architecture: arm64
+  profile: personal
+  region: eu-west-1
+  memorySize: 128
+  timeout: 20
+  logRetentionInDays: 14
+  deploymentMethod: direct
+  versionFunctions: false
+
+package:
+  artifact: dist/notifications.zip
+
+functions:
+  cloudwatch-logs:
+    handler: index.CloudWatchEventsHandler
+    events:
+      - cloudwatchLog:
+          logGroup: /aws/lambda/lambda4s-operations-prd-http4s
+          filter: '?Exception ?"Task timed out after"'

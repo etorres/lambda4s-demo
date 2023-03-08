@@ -1,0 +1,31 @@
+service: lambda4s-operations
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  stage: prd
+  runtime: nodejs16.x # nodejs18.x
+  architecture: arm64
+  profile: personal
+  region: eu-west-1
+  memorySize: 128
+  timeout: 20
+  logRetentionInDays: 14
+  deploymentMethod: direct
+  versionFunctions: false
+  environment:
+    LAMBDA4S_AWS_ACCESS_KEY_ID: ${env:LAMBDA4S_AWS_ACCESS_KEY_ID}
+    LAMBDA4S_AWS_SECRET_ACCESS_KEY: ${env:LAMBDA4S_AWS_SECRET_ACCESS_KEY}
+    LAMBDA4S_DATABASE_PASSWORD: ${env:LAMBDA4S_DATABASE_PASSWORD}
+    LAMBDA4S_DATABASE_USER: ${env:LAMBDA4S_DATABASE_USER}
+    LAMBDA4S_S3_BUCKET: ${env:LAMBDA4S_S3_BUCKET}
+
+package:
+  artifact: dist/operations.zip
+
+functions:
+  http4s:
+    handler: index.HttpEventsHandler
+    events:
+      - httpApi: '*'
