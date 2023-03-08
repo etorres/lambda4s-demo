@@ -1,6 +1,8 @@
 package es.eriktorr.lambda4s
 package http
 
+import TestFilters.online
+
 import cats.effect.{IO, Resource}
 import munit.CatsEffectSuite
 import org.http4s.ember.client.EmberClientBuilder
@@ -8,7 +10,7 @@ import sttp.client3.*
 import sttp.client3.impl.cats.FetchCatsBackend
 
 final class HttpClientSuite extends CatsEffectSuite:
-  test("should work with http4s".ignore) {
+  test("should work with http4s".tag(online)) {
     EmberClientBuilder
       .default[IO]
       .build
@@ -19,7 +21,7 @@ final class HttpClientSuite extends CatsEffectSuite:
       .assert
   }
 
-  test("should work with sttp") {
+  test("should work with sttp".tag(online)) {
     Resource
       .make(IO.delay(FetchCatsBackend[IO]()))(_.close())
       .use(backend =>
