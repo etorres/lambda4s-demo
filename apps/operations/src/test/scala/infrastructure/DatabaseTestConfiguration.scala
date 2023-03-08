@@ -19,7 +19,7 @@ enum DatabaseTestConfiguration(val config: DatabaseConfiguration):
 object DatabaseTestConfiguration:
   final private lazy val mySqlTest = DatabaseConfiguration(
     database = "<database>",
-    host = host"mysql.test",
+    host = host"localhost",
     password = Secret("changeMe"),
     port = port"3306",
     user = "test",
