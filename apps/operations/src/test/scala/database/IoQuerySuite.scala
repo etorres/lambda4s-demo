@@ -37,10 +37,8 @@ final class IoQuerySuite extends CatsEffectSuite:
       )
   }
 
-  test("should fail with an error when the given array is empty") {
-    IoQuery(IO.pure(js.Array()))
-      .option[TestRow]
-      .interceptMessage[IllegalArgumentException]("No records found")
+  test("should get none elements when the given array is empty") {
+    IoQuery(IO.pure(js.Array())).option[TestRow].assertEquals(None)
   }
 
   test("should fail with an error when the given array has more than one element") {

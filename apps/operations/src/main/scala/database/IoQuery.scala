@@ -17,7 +17,7 @@ object IoQuery:
   extension (self: IoQuery)
     def option[A](using rowMapper: RowMapper[A]): IO[Option[A]] = list[A].flatMap {
       case ::(head, Nil) => IO.some(head)
-      case Nil => IO.raiseError(new IllegalArgumentException("No records found"))
+      case Nil => IO.none
       case _ =>
         IO.raiseError(new IllegalArgumentException("Multiple records found, one expected"))
     }
@@ -40,4 +40,7 @@ object IoQuery:
           ),
       )
 
-    def unique[A](using rowMapper: RowMapper[A]): IO[A] = option[A].map(_.get)
+    def unique[A](using rowMapper: RowMapper[A]): IO[A] =
+      option[A].flatMap(
+        _.fold(IO.raiseError(new IllegalArgumentException("No records found")))(IO.pure),
+      )
