@@ -40,7 +40,7 @@ object CollectionGenerators:
     def go(state: State): Gen[Either[State, List[T]]] = state match
       case (_, retries) if retries == maximumRepeatedTries =>
         // Throws exception to improve error location
-        throw new RuntimeException(
+        throw RuntimeException(
           s"Generator failed after generating ${maximumRepeatedTries.toString} repeated values",
         )
       case (accumulated, _) if accumulated.size == num => Gen.const(Right(accumulated.toList))

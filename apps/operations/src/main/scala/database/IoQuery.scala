@@ -19,14 +19,14 @@ object IoQuery:
       case ::(head, Nil) => IO.some(head)
       case Nil => IO.none
       case _ =>
-        IO.raiseError(new IllegalArgumentException("Multiple records found, one expected"))
+        IO.raiseError(IllegalArgumentException("Multiple records found, one expected"))
     }
 
     def orElse[A](defaultValue: A)(using rowMapper: RowMapper[A]): IO[A] = list[A].flatMap {
       case ::(head, Nil) => IO.pure(head)
       case Nil => IO.pure(defaultValue)
       case _ =>
-        IO.raiseError(new IllegalArgumentException("Multiple records found, one expected"))
+        IO.raiseError(IllegalArgumentException("Multiple records found, one expected"))
     }
 
     def list[A](using rowMapper: RowMapper[A]): IO[List[A]] = self.query.map(rowMapper.from)
@@ -35,12 +35,12 @@ object IoQuery:
       list[A].flatMap(
         NonEmptyList
           .fromList(_)
-          .fold(IO.raiseError[NonEmptyList[A]](new IllegalArgumentException("No records found")))(
+          .fold(IO.raiseError[NonEmptyList[A]](IllegalArgumentException("No records found")))(
             IO.pure,
           ),
       )
 
     def unique[A](using rowMapper: RowMapper[A]): IO[A] =
       option[A].flatMap(
-        _.fold(IO.raiseError(new IllegalArgumentException("No records found")))(IO.pure),
+        _.fold(IO.raiseError(IllegalArgumentException("No records found")))(IO.pure),
       )

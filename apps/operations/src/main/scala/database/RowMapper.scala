@@ -63,7 +63,7 @@ object RowMapper:
                   case DoubleType | IntType | StringType => value
                 ) *: values
               }
-              .getOrElse(throw new IllegalStateException(s"Missing field: $columnName")),
+              .getOrElse(throw IllegalStateException(s"Missing field: $columnName")),
           )
       val values = fillWith(fields, EmptyTuple)
       summon[Mirror.ProductOf[A]].fromProduct(values)

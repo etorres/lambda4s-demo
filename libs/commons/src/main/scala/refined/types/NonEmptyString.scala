@@ -16,7 +16,7 @@ final class NonEmptyString private (val value: String) extends Product with Seri
     case _ => false
   override def productArity: Int = 1
   override def productElement(n: Int): Any =
-    if n == 0 then value else throw new IndexOutOfBoundsException
+    if n == 0 then value else throw IndexOutOfBoundsException()
 
 object NonEmptyString:
   def fromString(value: String): Option[NonEmptyString] =

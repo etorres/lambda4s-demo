@@ -55,7 +55,7 @@ object S3Signer:
               }
               .mkString("&")
 
-        val hashedPayload = sha256HexDigest(body.getOrElse(new String(Array.emptyByteArray)))
+        val hashedPayload = sha256HexDigest(body.getOrElse(String(Array.emptyByteArray)))
 
         val canonicalHeaders = List(
           s"host:$host",

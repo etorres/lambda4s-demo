@@ -38,4 +38,4 @@ object MySqlTransactor:
               .setDatabase(databaseConfiguration.database),
           ).toIO,
         )(connection => IO.blocking(connection.destroy()))
-    yield new MySqlTransactor(connection)
+    yield MySqlTransactor(connection)

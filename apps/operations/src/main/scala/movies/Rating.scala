@@ -16,5 +16,5 @@ object Rating:
   private def fromName(name: String): Option[Rating] = Rating.values.find(_.name == name)
 
   def fromNameOrFail(name: String): Rating = fromName(name).getOrElse(
-    throw new IllegalArgumentException(s"No rating found with name: $name"),
+    throw IllegalArgumentException(s"No rating found with name: $name"),
   )
