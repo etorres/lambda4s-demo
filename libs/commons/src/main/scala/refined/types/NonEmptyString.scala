@@ -3,28 +3,32 @@ package refined.types
 
 import cats.Show
 
-import scala.compiletime.asMatchable
-import scala.util.hashing.MurmurHash3
-
-final class NonEmptyString private (val value: String) extends Product with Serializable:
-  override def toString: String = value
-  override def hashCode: Int = MurmurHash3.productHash(this, productPrefix.hashCode)
-  override def canEqual(other: Any): Boolean = other.isInstanceOf[NonEmptyString]
-
-  override def equals(other: Any): Boolean = other.asMatchable match
-    case that: NonEmptyString => value == that.value
-    case _ => false
-  override def productArity: Int = 1
-  override def productElement(n: Int): Any =
-    if n == 0 then value else throw IndexOutOfBoundsException()
+opaque type NonEmptyString <: String = String
 
 object NonEmptyString:
-  def fromString(value: String): Option[NonEmptyString] =
-    if value.nonEmpty then Some(NonEmptyString(value)) else None
+  def from(value: String): Option[NonEmptyString] =
+    if value.nonEmpty then Some(value) else None
 
   def unsafeFrom(value: String): NonEmptyString =
-    fromString(value).getOrElse(throw IllegalArgumentException("Invalid value found"))
+    from(value).getOrElse(throw IllegalArgumentException(errorMessage))
 
-  def unapply(nonEmptyString: NonEmptyString): Option[String] = Some(nonEmptyString.value)
+  extension (nonEmptyString: NonEmptyString) def asString: String = nonEmptyString
 
-  given Show[NonEmptyString] = Show.fromToString[NonEmptyString]
+  given Show[NonEmptyString] = Show.fromToString
+
+  private inline val errorMessage = "Value cannot be empty"
+
+  inline def const(inline value: String): NonEmptyString =
+    scala.compiletime.requireConst(value)
+    inline if nonEmptyConst(value) then value
+    else scala.compiletime.error(errorMessage)
+
+  import scala.quoted.{Expr, Quotes}
+
+  private transparent inline def nonEmptyConst(inline value: String): Boolean = ${
+    nonEmptyConstImpl('{ value })
+  }
+
+  private def nonEmptyConstImpl(value: Expr[String])(using Quotes): Expr[Boolean] =
+    val res = value.valueOrAbort.nonEmpty
+    Expr(res)

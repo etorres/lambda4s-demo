@@ -56,7 +56,7 @@ object RowMapper:
                   case NonEmptyStringType =>
                     val jsString = value.asInstanceOf[String]
                     NonEmptyString
-                      .fromString(jsString)
+                      .from(jsString)
                       .getOrElse(
                         throw IllegalStateException(s"Unsupported value for column: $columnName"),
                       )
