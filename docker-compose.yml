@@ -41,6 +41,6 @@ services:
     ports:
       - "4566:4566"
     volumes:
-      - "./docker/localstack/create_s3_bucket.sh:/docker-entrypoint-initaws.d/create_s3_bucket.sh"
+      - "./docker/localstack/create_s3_bucket.sh:/etc/localstack/init/ready.d/create_s3_bucket.sh"
       - "${LOCALSTACK_VOLUME_DIR:-./.localstack}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
