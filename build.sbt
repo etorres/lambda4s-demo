@@ -49,7 +49,7 @@ lazy val notifications = project
   .configure(baseSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "com.comcast" %%% "ip4s-core" % "3.2.0",
+      "com.comcast" %%% "ip4s-core" % "3.3.0",
       "io.circe" %%% "circe-parser" % "0.14.5",
       "is.cir" %%% "ciris" % "3.1.0",
       "org.http4s" %%% "http4s-circe" % "0.23.18",
@@ -66,8 +66,8 @@ lazy val operations = project
   .configure(baseSettings, nodeJsSettings)
   .settings(
     libraryDependencies ++= Seq(
-      "com.comcast" %%% "ip4s-core" % "3.2.0",
-      "com.softwaremill.sttp.client3" %%% "cats" % "3.8.12" % Test,
+      "com.comcast" %%% "ip4s-core" % "3.3.0",
+      "com.softwaremill.sttp.client3" %%% "cats" % "3.8.14" % Test,
       "io.circe" %%% "circe-parser" % "0.14.5" % Test,
       "is.cir" %%% "ciris" % "3.1.0",
       "org.gnieh" %%% "fs2-data-xml" % "1.6.1",
