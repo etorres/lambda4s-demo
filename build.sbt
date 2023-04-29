@@ -38,7 +38,7 @@ lazy val commons = project
       "io.github.cquiroz" %%% "scala-java-time" % "2.5.0" % Optional,
       "is.cir" %%% "ciris" % "3.1.0" % Optional,
       "org.log4s" %%% "log4s" % "1.10.0" % Optional,
-      "org.typelevel" %%% "cats-effect" % "3.4.9" % Optional,
+      "org.typelevel" %%% "cats-effect" % "3.4.10" % Optional,
       "org.typelevel" %%% "log4cats-core" % "2.6.0" % Optional,
     ),
   )
