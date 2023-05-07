@@ -70,7 +70,7 @@ lazy val operations = project
       "com.softwaremill.sttp.client3" %%% "cats" % "3.8.15" % Test,
       "io.circe" %%% "circe-parser" % "0.14.5" % Test,
       "is.cir" %%% "ciris" % "3.1.0",
-      "org.gnieh" %%% "fs2-data-xml" % "1.7.0",
+      "org.gnieh" %%% "fs2-data-xml" % "1.7.1",
       "org.http4s" %%% "http4s-circe" % "0.23.18",
       "org.http4s" %%% "http4s-dsl" % "0.23.18",
       "org.http4s" %%% "http4s-ember-client" % "0.23.18",
