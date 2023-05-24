@@ -36,7 +36,7 @@ lazy val commons = project
   .settings(
     libraryDependencies ++= Seq(
       "io.github.cquiroz" %%% "scala-java-time" % "2.5.0" % Optional,
-      "is.cir" %%% "ciris" % "3.1.0" % Optional,
+      "is.cir" %%% "ciris" % "3.2.0" % Optional,
       "org.log4s" %%% "log4s" % "1.10.0" % Optional,
       "org.typelevel" %%% "cats-effect" % "3.4.10" % Optional,
       "org.typelevel" %%% "log4cats-core" % "2.6.0" % Optional,
@@ -51,7 +51,7 @@ lazy val notifications = project
     libraryDependencies ++= Seq(
       "com.comcast" %%% "ip4s-core" % "3.3.0",
       "io.circe" %%% "circe-parser" % "0.14.5",
-      "is.cir" %%% "ciris" % "3.1.0",
+      "is.cir" %%% "ciris" % "3.2.0",
       "org.http4s" %%% "http4s-circe" % "0.23.18",
       "org.http4s" %%% "http4s-dsl" % "0.23.18",
       "org.http4s" %%% "http4s-ember-client" % "0.23.18",
@@ -69,7 +69,7 @@ lazy val operations = project
       "com.comcast" %%% "ip4s-core" % "3.3.0",
       "com.softwaremill.sttp.client3" %%% "cats" % "3.8.15" % Test,
       "io.circe" %%% "circe-parser" % "0.14.5" % Test,
-      "is.cir" %%% "ciris" % "3.1.0",
+      "is.cir" %%% "ciris" % "3.2.0",
       "org.gnieh" %%% "fs2-data-xml" % "1.7.1",
       "org.http4s" %%% "http4s-circe" % "0.23.18",
       "org.http4s" %%% "http4s-dsl" % "0.23.18",
