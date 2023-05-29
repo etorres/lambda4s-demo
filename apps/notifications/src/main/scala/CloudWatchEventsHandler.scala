@@ -7,7 +7,7 @@ import slack.{CloudWatchEvent, CloudWatchLogEvents, SlackMessage, SlackWebhook}
 import cats.effect.{IO, Resource}
 import feral.lambda.{Context, INothing, IOLambda}
 import fs2.compression.Compression
-import fs2.io.compression.fs2ioCompressionForAsync
+import fs2.io.compression.fs2ioCompressionForLiftIO
 import io.circe.parser.decode
 import org.http4s.ember.client.EmberClientBuilder
 
