@@ -57,7 +57,7 @@ function package_with_dependencies {
 
   sbt "project $app" clean npmPackage
   mkdir -p dist/"$app"
-  cp -r apps/"$app"/target/scala-3.2.2/npm-package/* dist/"$app"
+  cp -r apps/"$app"/target/scala-3.3.0/npm-package/* dist/"$app"
   cd dist/"$app" ; npm -s install --package-lock=false promise-mysql@5.2.0 ; zip -r ../"$app".zip .
   cd "$working_dir"
 }
