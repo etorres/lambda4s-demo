@@ -1,7 +1,7 @@
 ThisBuild / organization := "es.eriktorr"
 ThisBuild / version := "1.0.0"
 
-ThisBuild / scalaVersion := "3.2.2"
+ThisBuild / scalaVersion := "3.3.0"
 
 ThisBuild / scalacOptions ++= Seq(
   "-Xfatal-warnings",
@@ -55,7 +55,7 @@ lazy val notifications = project
       "org.http4s" %%% "http4s-circe" % "0.23.19",
       "org.http4s" %%% "http4s-dsl" % "0.23.19",
       "org.http4s" %%% "http4s-ember-client" % "0.23.19",
-      "org.typelevel" %%% "feral-lambda-http4s" % "0.2.2",
+      "org.typelevel" %%% "feral-lambda-http4s" % "0.2.3",
     ),
   )
   .dependsOn(`commons` % "test->test;compile->compile")
@@ -75,7 +75,7 @@ lazy val operations = project
       "org.http4s" %%% "http4s-dsl" % "0.23.19",
       "org.http4s" %%% "http4s-ember-client" % "0.23.19",
       "org.typelevel" %%% "case-insensitive" % "1.4.0",
-      "org.typelevel" %%% "feral-lambda-http4s" % "0.2.2",
+      "org.typelevel" %%% "feral-lambda-http4s" % "0.2.3",
     ),
     Compile / npmDependencies ++= Seq(
       "mysql" -> "2.18.1",
