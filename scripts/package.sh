@@ -66,7 +66,7 @@ function package_no_dependencies {
   app="$1"
 
   sbt "project $app" clean npmPackage
-  zip -rj dist/"$app".zip apps/"$app"/target/scala-3.2.2/npm-package/*
+  zip -rj dist/"$app".zip apps/"$app"/target/scala-3.3.0/npm-package/*
 }
 
 if [ $# -eq 0 ]; then
