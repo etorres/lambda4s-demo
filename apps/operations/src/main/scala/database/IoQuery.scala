@@ -22,25 +22,25 @@ object IoQuery:
         IO.raiseError(IllegalArgumentException("Multiple records found, one expected"))
     }
 
-    def orElse[A](defaultValue: A)(using rowMapper: RowMapper[A]): IO[A] = list[A].flatMap {
-      case ::(head, Nil) => IO.pure(head)
-      case Nil => IO.pure(defaultValue)
-      case _ =>
-        IO.raiseError(IllegalArgumentException("Multiple records found, one expected"))
-    }
+  def orElse[A](defaultValue: A)(using rowMapper: RowMapper[A]): IO[A] = list[A].flatMap {
+    case ::(head, Nil) => IO.pure(head)
+    case Nil => IO.pure(defaultValue)
+    case _ =>
+      IO.raiseError(IllegalArgumentException("Multiple records found, one expected"))
+  }
 
-    def list[A](using rowMapper: RowMapper[A]): IO[List[A]] = self.query.map(rowMapper.from)
+  def list[A](using rowMapper: RowMapper[A]): IO[List[A]] = self.query.map(rowMapper.from)
 
-    def nonEmptyList[A](using rowMapper: RowMapper[A]): IO[NonEmptyList[A]] =
-      list[A].flatMap(
-        NonEmptyList
-          .fromList(_)
-          .fold(IO.raiseError[NonEmptyList[A]](IllegalArgumentException("No records found")))(
-            IO.pure,
-          ),
-      )
+  def nonEmptyList[A](using rowMapper: RowMapper[A]): IO[NonEmptyList[A]] =
+    list[A].flatMap(
+      NonEmptyList
+        .fromList(_)
+        .fold(IO.raiseError[NonEmptyList[A]](IllegalArgumentException("No records found")))(
+          IO.pure,
+        ),
+    )
 
-    def unique[A](using rowMapper: RowMapper[A]): IO[A] =
-      option[A].flatMap(
-        _.fold(IO.raiseError(IllegalArgumentException("No records found")))(IO.pure),
-      )
+  def unique[A](using rowMapper: RowMapper[A]): IO[A] =
+    option[A].flatMap(
+      _.fold(IO.raiseError(IllegalArgumentException("No records found")))(IO.pure),
+    )

@@ -12,12 +12,12 @@ object PromiseLikeSyntax:
   extension [A](self: PromiseLike[A])
     def toIO(using executionContext: ExecutionContext): IO[A] = toIO(timeout = None)
 
-    def toIO(timeout: FiniteDuration)(using executionContext: ExecutionContext): IO[A] = toIO(
-      Some(timeout),
-    )
+  def toIO(timeout: FiniteDuration)(using executionContext: ExecutionContext): IO[A] = toIO(
+    Some(timeout),
+  )
 
-    private def toIO(timeout: Option[FiniteDuration])(using
-        executionContext: ExecutionContext,
-    ): IO[A] =
-      val blockingIO = IO.blocking(self.toFuture.andThen { case Success(result) => result })
-      IO.fromFuture(timeout.fold(blockingIO)(blockingIO.timeout))
+  private def toIO(timeout: Option[FiniteDuration])(using
+      executionContext: ExecutionContext,
+  ): IO[A] =
+    val blockingIO = IO.blocking(self.toFuture.andThen { case Success(result) => result })
+    IO.fromFuture(timeout.fold(blockingIO)(blockingIO.timeout))
