@@ -105,7 +105,7 @@ lazy val baseSettings: Project => Project = _.settings(
   idePackagePrefix := Some("es.eriktorr.lambda4s"),
   Global / excludeLintKeys += idePackagePrefix,
   libraryDependencies += compilerPlugin(
-    "com.github.ghik" % "zerowaste" % "0.2.9" cross CrossVersion.full,
+    "com.github.ghik" % "zerowaste" % "0.2.10" cross CrossVersion.full,
   ),
   libraryDependencies ++= Seq(
     "com.47deg" %%% "scalacheck-toolbox-datetime" % "0.7.0" % Test,
