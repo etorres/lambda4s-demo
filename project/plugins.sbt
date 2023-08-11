@@ -3,7 +3,7 @@ ThisBuild / libraryDependencySchemes += "org.scala-lang.modules" %% "scala-xml" 
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.13.2")
 addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.21.1")
 addSbtPlugin("org.scalablytyped.converter" % "sbt-converter" % "1.0.0-beta42")
-addSbtPlugin("com.disneystreaming.smithy4s" % "smithy4s-sbt-codegen" % "0.17.13")
+addSbtPlugin("com.disneystreaming.smithy4s" % "smithy4s-sbt-codegen" % "0.17.15")
 addSbtPlugin("org.typelevel" %% "sbt-feral-lambda" % "0.2.3")
 // Development tools
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.11.0")
