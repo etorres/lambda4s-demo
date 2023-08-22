@@ -67,7 +67,7 @@ lazy val operations = project
   .settings(
     libraryDependencies ++= Seq(
       "com.comcast" %%% "ip4s-core" % "3.3.0",
-      "com.softwaremill.sttp.client3" %%% "cats" % "3.8.16" % Test,
+      "com.softwaremill.sttp.client3" %%% "cats" % "3.9.0" % Test,
       "io.circe" %%% "circe-parser" % "0.14.5" % Test,
       "is.cir" %%% "ciris" % "3.2.0",
       "org.gnieh" %%% "fs2-data-xml" % "1.8.0",
