@@ -104,9 +104,6 @@ lazy val MUnitFramework = new TestFramework("munit.Framework")
 lazy val baseSettings: Project => Project = _.settings(
   idePackagePrefix := Some("es.eriktorr.lambda4s"),
   Global / excludeLintKeys += idePackagePrefix,
-  libraryDependencies += compilerPlugin(
-    "com.github.ghik" % "zerowaste" % "0.2.12" cross CrossVersion.full,
-  ),
   libraryDependencies ++= Seq(
     "com.47deg" %%% "scalacheck-toolbox-datetime" % "0.7.0" % Test,
     "io.chrisdavenport" %%% "cats-scalacheck" % "0.3.2" % Test,
