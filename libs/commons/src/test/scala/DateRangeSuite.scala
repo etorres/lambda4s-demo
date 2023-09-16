@@ -5,7 +5,6 @@ import DateRange.localDateTimeRangeWeekConverter.localDateRangeWeekConverter
 import munit.FunSuite
 
 import java.time.{LocalDate, Month}
-import java.util.Locale
 
 final class DateRangeSuite extends FunSuite:
   test("should get the weeks covering a given date time range") {

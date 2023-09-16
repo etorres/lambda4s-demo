@@ -11,16 +11,15 @@ ThisBuild / scalacOptions ++= Seq(
   "-source:future", // https://github.com/oleg-py/better-monadic-for
   "-Yexplicit-nulls", // https://docs.scala-lang.org/scala3/reference/other-new-features/explicit-nulls.html
   "-Ysafe-init", // https://docs.scala-lang.org/scala3/reference/other-new-features/safe-initialization.html
-  // "-Wunused:implicits",
-  // "-Wunused:imports",
-  // "-Wunused:values",
-  // "-Wvalue-discard",
+  "-Wnonunit-statement",
+  "-Wunused:all",
 )
 
 Global / onChangedBuildSource := ReloadOnSourceChanges
 Test / fork := false
 
 ThisBuild / semanticdbEnabled := true
+ThisBuild / javacOptions ++= Seq("-source", "17", "-target", "17")
 
 ThisBuild / evictionErrorLevel := Level.Info
 

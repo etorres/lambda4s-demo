@@ -3,8 +3,6 @@ package movies
 
 import CollectionGenerators.nDistinct
 import TemporalGenerators.{localDateTimeRangeGen, outOfLocalDateTimeRange, withinLocalDateTimeRange}
-import database.Transactor
-import database.mysql.MySqlTransactor
 import infrastructure.DatabaseTestConfiguration.SakilaMySqlTest
 import infrastructure.{DatabaseTestConfiguration, MySqlSuite, MySqlTestTransactor, RowWriter}
 import movies.MoviesReader.{CumulativeRevenue, RatingCounter}
@@ -17,14 +15,12 @@ import movies.writers.RentalRowWriter.rentalIdGen
 import movies.writers.StaffRowWriter.staffIdGen
 import movies.writers.{FilmRowWriter, PaymentRowWriter}
 
-import cats.Applicative
 import cats.data.NonEmptyList
 import cats.effect.IO
 import cats.implicits.toTraverseOps
 import org.scalacheck.Gen
 import org.scalacheck.cats.implicits.*
 import org.scalacheck.effect.PropF.forAllF
-import org.typelevel.log4cats.Logger
 
 import java.time.{LocalDate, LocalDateTime}
 import scala.annotation.tailrec

@@ -1,9 +1,7 @@
 package smithy4s.aws
 
-import cats.data.NonEmptyList
 import cats.effect.IO
 import munit.CatsEffectSuite
-import org.http4s.{Header, Request}
 import org.typelevel.ci.CIStringSyntax
 import smithy4s.http.Metadata
 

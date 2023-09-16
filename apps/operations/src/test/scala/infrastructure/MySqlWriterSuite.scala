@@ -1,8 +1,6 @@
 package es.eriktorr.lambda4s
 package infrastructure
 
-import database.RowMapper
-
 import cats.effect.IO
 import cats.implicits.toFoldableOps
 

@@ -7,7 +7,6 @@ import database.{IoQuery, Transactor}
 import cats.effect.{IO, Resource}
 import cats.implicits.toFoldableOps
 
-import scala.annotation.nowarn
 import scala.concurrent.ExecutionContext
 import scala.scalajs.js
 

@@ -11,7 +11,6 @@ import java.time.LocalDate
 import scala.annotation.tailrec
 import scala.deriving.Mirror
 import scala.scalajs.js
-import scala.util.{Failure, Success, Try}
 
 trait RowMapper[A]:
   def from(rows: js.Array[js.Object]): List[A]

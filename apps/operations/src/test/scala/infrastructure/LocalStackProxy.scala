@@ -39,7 +39,7 @@ object LocalStackProxy:
 
   object LocalStackSttpProxy:
     import sttp.capabilities.WebSockets
-    import sttp.client3.{Identity, Request, RequestT, Response, SttpBackend}
+    import sttp.client3.{Identity, Request, Response, SttpBackend}
     import sttp.model.{Header, HeaderNames, Uri}
     import sttp.monad.MonadError
 

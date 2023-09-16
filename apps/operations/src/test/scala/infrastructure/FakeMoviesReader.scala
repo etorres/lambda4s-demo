@@ -8,7 +8,6 @@ import movies.MoviesReader.{CumulativeRevenue, RatingCounter}
 import cats.effect.{IO, Ref}
 
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 final class FakeMoviesReader(stateRef: Ref[IO, MoviesReaderState]) extends MoviesReader:
   override def filmsByRating: IO[List[RatingCounter]] =

@@ -8,7 +8,6 @@ import refined.types.NonEmptyString
 import cats.data.NonEmptyList
 import cats.effect.IO
 import munit.CatsEffectSuite
-import org.typelevel.ci.CIStringSyntax
 
 import java.time.LocalDate
 import scala.scalajs.js
