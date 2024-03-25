@@ -11,7 +11,7 @@ object S3ResponseParser:
   def keysFoundIn(xml: String, key: String): IO[Long] = Stream
     .emit(xml)
     .through(events[IO, String]())
-    .through(filter.collect(xpath"/*/Contents/Key", collector.show, deterministic = false))
+    .through(filter.collect(xpath"/*/Contents/Key", collector.raw(false), deterministic = false))
     .filter(_ == s"<Key>$key</Key>")
     .compile
     .count
