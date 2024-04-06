@@ -5,7 +5,9 @@ import org.http4s.client.dsl as http4sDsl
 import org.http4s.{Header, Method, Request, Uri}
 import org.typelevel.ci.CIStringSyntax
 import smithy4s.http.Metadata
-import smithy4s.http.internals.URIEncoderDecoder.encode as uriEncode
+
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 /** Amazon S3 AWS4 request signer.
   * @see
@@ -43,6 +45,8 @@ object S3Signer:
         val httpMethod = Method.GET.name.toUpperCase
 
         val canonicalUri = "/"
+
+        def uriEncode(fragment: String) = URLEncoder.encode(fragment, StandardCharsets.UTF_8)
 
         val canonicalQueryString =
           if metadata.query.isEmpty then ""
