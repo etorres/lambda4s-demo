@@ -38,7 +38,7 @@ lazy val commons = project
       "is.cir" %%% "ciris" % "3.5.0" % Optional,
       "org.log4s" %%% "log4s" % "1.10.0" % Optional,
       "org.typelevel" %%% "cats-effect" % "3.5.4" % Optional,
-      "org.typelevel" %%% "log4cats-core" % "2.6.0" % Optional,
+      "org.typelevel" %%% "log4cats-core" % "2.7.0" % Optional,
     ),
   )
 
