@@ -4,7 +4,7 @@ addSbtPlugin("org.scala-js" % "sbt-scalajs" % "1.16.0")
 addSbtPlugin("ch.epfl.scala" % "sbt-scalajs-bundler" % "0.21.1")
 addSbtPlugin("org.scalablytyped.converter" % "sbt-converter" % "1.0.0-beta44")
 addSbtPlugin("com.disneystreaming.smithy4s" % "smithy4s-sbt-codegen" % "0.18.16")
-addSbtPlugin("org.typelevel" %% "sbt-feral-lambda" % "0.2.4")
+addSbtPlugin("org.typelevel" %% "sbt-feral-lambda" % "0.3.0")
 // Development tools
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.12.0")
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.2")
