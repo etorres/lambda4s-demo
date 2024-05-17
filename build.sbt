@@ -1,7 +1,7 @@
 ThisBuild / organization := "es.eriktorr"
 ThisBuild / version := "1.0.0"
 
-ThisBuild / scalaVersion := "3.4.1"
+ThisBuild / scalaVersion := "3.4.2"
 
 ThisBuild / scalacOptions ++= Seq(
   "-Xfatal-warnings",
