@@ -17,25 +17,26 @@ final class CustomerRowWriter(testTransactor: MySqlTestTransactor)
     with RowWriter[CustomerRow]:
   override def add(rows: List[CustomerRow]): IO[Unit] = super.add(
     rows,
-    row => s"""INSERT INTO customer (
-              | customer_id,
-              | store_id,
-              | first_name,
-              | last_name,
-              | email,
-              | address_id,
-              | active,
-              | create_date
-              |) VALUES (
-              | ${row.customer_id},
-              | ${row.store_id},
-              | '${row.first_name}',
-              | '${row.last_name}',
-              | '${row.email}',
-              | ${row.address_id},
-              | ${if row.active then 1 else 0},
-              | '${row.create_date.format(dateTimeFormatter)}'
-              |)""".stripMargin,
+    row =>
+      s"""INSERT INTO customer (
+         | customer_id,
+         | store_id,
+         | first_name,
+         | last_name,
+         | email,
+         | address_id,
+         | active,
+         | create_date
+         |) VALUES (
+         | ${row.customer_id},
+         | ${row.store_id},
+         | '${row.first_name}',
+         | '${row.last_name}',
+         | '${row.email}',
+         | ${row.address_id},
+         | ${if row.active then 1 else 0},
+         | '${row.create_date.format(dateTimeFormatter)}'
+         |)""".stripMargin,
   )
 
 object CustomerRowWriter:

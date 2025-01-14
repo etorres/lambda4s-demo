@@ -15,30 +15,31 @@ final class StaffRowWriter(testTransactor: MySqlTestTransactor)
     with RowWriter[StaffRow]:
   override def add(rows: List[StaffRow]): IO[Unit] = super.add(
     rows,
-    row => s"""INSERT INTO staff (
-              | staff_id,
-              | first_name,
-              | last_name,
-              | address_id,
-              | picture,
-              | email,
-              | store_id,
-              | active,
-              | username,
-              | password
-              |) VALUES (
-              | ${row.staff_id},
-              | '${row.first_name}',
-              | '${row.last_name}',
-              | ${row.address_id},
-              | null,
-              | '${row.email}',
-              | ${row.store_id},
-              | ${if row.active then 1 else 0},
-              | '${row.username}',
-              | '${row.password}'
-              |)
-              |""".stripMargin,
+    row =>
+      s"""INSERT INTO staff (
+         | staff_id,
+         | first_name,
+         | last_name,
+         | address_id,
+         | picture,
+         | email,
+         | store_id,
+         | active,
+         | username,
+         | password
+         |) VALUES (
+         | ${row.staff_id},
+         | '${row.first_name}',
+         | '${row.last_name}',
+         | ${row.address_id},
+         | null,
+         | '${row.email}',
+         | ${row.store_id},
+         | ${if row.active then 1 else 0},
+         | '${row.username}',
+         | '${row.password}'
+         |)
+         |""".stripMargin,
   )
 
 object StaffRowWriter:
