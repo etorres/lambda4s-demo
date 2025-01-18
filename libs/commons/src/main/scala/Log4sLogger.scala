@@ -14,18 +14,15 @@ object Log4sLogger:
 
     @inline override def isDebugEnabled: IO[Boolean] = IO.pure(logLevel match
       case Debug | Trace => true
-      case _ => false,
-    )
+      case _ => false)
 
     @inline override def isInfoEnabled: IO[Boolean] = IO.pure(logLevel match
       case Debug | Trace | Info => true
-      case _ => false,
-    )
+      case _ => false)
 
     @inline override def isWarnEnabled: IO[Boolean] = IO.pure(logLevel match
       case Debug | Trace | Info | Warn => true
-      case _ => false,
-    )
+      case _ => false)
 
     @inline override def isErrorEnabled: IO[Boolean] = IO.pure(true)
 
