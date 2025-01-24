@@ -15,21 +15,22 @@ final class RentalRowWriter(testTransactor: MySqlTestTransactor)
     with RowWriter[RentalRow]:
   override def add(rows: List[RentalRow]): IO[Unit] = super.add(
     rows,
-    row => s"""INSERT INTO rental (
-              | rental_id,
-              | rental_date,
-              | inventory_id,
-              | customer_id,
-              | return_date,
-              | staff_id
-              |) VALUES (
-              | ${row.rental_id},
-              | '${row.rental_date.format(dateTimeFormatter)}',
-              | ${row.inventory_id},
-              | ${row.customer_id},
-              | ${row.return_date.fold("NULL")(x => s"'${x.format(dateTimeFormatter)}'")},
-              | ${row.staff_id}
-              |)""".stripMargin,
+    row =>
+      s"""INSERT INTO rental (
+         | rental_id,
+         | rental_date,
+         | inventory_id,
+         | customer_id,
+         | return_date,
+         | staff_id
+         |) VALUES (
+         | ${row.rental_id},
+         | '${row.rental_date.format(dateTimeFormatter)}',
+         | ${row.inventory_id},
+         | ${row.customer_id},
+         | ${row.return_date.fold("NULL")(x => s"'${x.format(dateTimeFormatter)}'")},
+         | ${row.staff_id}
+         |)""".stripMargin,
   )
 
 object RentalRowWriter:

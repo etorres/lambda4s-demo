@@ -17,33 +17,34 @@ final class FilmRowWriter(testTransactor: MySqlTestTransactor)
     with RowWriter[FilmRow]:
   override def add(rows: List[FilmRow]): IO[Unit] = super.add(
     rows,
-    row => s"""INSERT INTO film (
-              | film_id,
-              | title,
-              | description,
-              | release_year,
-              | language_id,
-              | original_language_id,
-              | rental_duration,
-              | rental_rate,
-              | length,
-              | replacement_cost,
-              | rating,
-              | special_features
-              |) VALUES (
-              | ${row.film_id},
-              | '${row.title}',
-              | ${row.description.fold("NULL")(x => s"'$x'")},
-              | ${row.release_year},
-              | ${row.language_id},
-              | ${row.original_language_id.getOrElse("NULL")},
-              | ${row.rental_duration},
-              | '${row.rental_rate}',
-              | ${row.length.getOrElse("NULL")},
-              | '${row.replacement_cost}',
-              | '${row.rating.name}',
-              | ${row.special_features.fold("NULL")(x => s"'$x'")}
-              |)""".stripMargin,
+    row =>
+      s"""INSERT INTO film (
+         | film_id,
+         | title,
+         | description,
+         | release_year,
+         | language_id,
+         | original_language_id,
+         | rental_duration,
+         | rental_rate,
+         | length,
+         | replacement_cost,
+         | rating,
+         | special_features
+         |) VALUES (
+         | ${row.film_id},
+         | '${row.title}',
+         | ${row.description.fold("NULL")(x => s"'$x'")},
+         | ${row.release_year},
+         | ${row.language_id},
+         | ${row.original_language_id.getOrElse("NULL")},
+         | ${row.rental_duration},
+         | '${row.rental_rate}',
+         | ${row.length.getOrElse("NULL")},
+         | '${row.replacement_cost}',
+         | '${row.rating.name}',
+         | ${row.special_features.fold("NULL")(x => s"'$x'")}
+         |)""".stripMargin,
   )
 
 object FilmRowWriter:
