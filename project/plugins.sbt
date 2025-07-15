@@ -8,5 +8,5 @@ addSbtPlugin("org.typelevel" %% "sbt-feral-lambda" % "0.2.4")
 // Development tools
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.12.0")
 addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.5.2")
-addSbtPlugin("org.jetbrains.scala" % "sbt-ide-settings" % "1.1.2")
+addSbtPlugin("org.jetbrains.scala" % "sbt-ide-settings" % "1.1.3")
 addDependencyTreePlugin
